@@ -29,9 +29,9 @@
 
 	O = new species.primitive(loc)
 
-	O.dna = dna
-	O.dna.uni_identity = "000000000000000000DC00000660004DA0A0E00"
-	O.dna.struc_enzymes = "[copytext(O.dna.struc_enzymes,1,1+3*(STRUCDNASIZE-1))]BB8"
+	O.dna = dna.Clone()
+	O.dna.SetSEState(MONKEYBLOCK,1)
+	O.loc = loc
 	O.viruses = viruses
 	O.a_intent = "harm"
 
