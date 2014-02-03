@@ -32,7 +32,7 @@
 #define DNA_UI_HAIR_STYLE  13
 #define DNA_UI_LENGTH      13 // Update this when you add something, or you WILL break shit.
 
-#define DNA_SE_LENGTH 50 // Was STRUCDNASIZE, size 27. 15 new blocks added = 42, plus room to grow.
+#define DNA_SE_LENGTH 55 // Was STRUCDNASIZE, size 27. 15 new blocks added = 42, plus room to grow.
 
 // Defines which values mean "on" or "off".
 //  This is to make some of the more OP superpowers a larger PITA to activate,
@@ -232,7 +232,7 @@ var/global/list/datum/dna/gene/dna_genes[0]
 
 // Set a DNA SE block's raw value.
 /datum/dna/proc/SetSEValue(var/block,var/value,var/defer=0)
-	//testing("SetSEBlock([block],[value],[defer]): [value] -> [nval]")
+
 	if (block<=0) return
 	ASSERT(value>=0)
 	ASSERT(value<=4095)
@@ -240,6 +240,7 @@ var/global/list/datum/dna/gene/dna_genes[0]
 	dirtySE=1
 	if(!defer)
 		UpdateSE()
+	//testing("SetSEBlock([block],[value],[defer]): [value] -> [GetSEValue(block)]")
 
 // Get a DNA SE block's raw value.
 /datum/dna/proc/GetSEValue(var/block)

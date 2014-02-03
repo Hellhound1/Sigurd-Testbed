@@ -197,6 +197,13 @@ datum
 			required_catalysts = list("plasma" = 5)
 			result_amount = 2
 
+		holy_water
+			name = "Holy Water"
+			id = "holywater"
+			result = "holywater"
+			required_reagents = list("water" = 1, "mercury" = 1, "wine" = 1)
+			result_amount = 3
+
 		virus_food
 			name = "Virus Food"
 			id = "virusfood"
@@ -699,8 +706,8 @@ datum
 			name = "Plant-B-Gone"
 			id = "plantbgone"
 			result = "plantbgone"
-			required_reagents = list("toxin" = 1, "water" = 4)
-			result_amount = 5
+			required_reagents = list("chlorine" = 1, "hydrogen" = 1, "nitrogen" = 1)
+			result_amount = 3
 
 
 /////////////////////////////////////OLD SLIME CORE REACTIONS ///////////////////////////////
@@ -1372,8 +1379,9 @@ datum
 			required_container = /obj/item/slime_extract/adamantine
 			required_other = 1
 			on_reaction(var/datum/reagents/holder)
-				var/obj/effect/golemrune/Z = new /obj/effect/golemrune
-				Z.loc = get_turf_loc(holder.my_atom)
+				feedback_add_details("slime_cores_used","[replacetext(name," ","_")]")
+				var/obj/effect/golem_rune/Z = new /obj/effect/golem_rune
+				Z.loc = get_turf(holder.my_atom)
 				Z.announce_to_ghosts()
 //////////////////////////////////////////FOOD MIXTURES////////////////////////////////////
 
@@ -1553,7 +1561,7 @@ datum
 			name = "Space Beer"
 			id = "spacebeer"
 			result = "beer"
-			required_reagents = list("flour" = 10)
+			required_reagents = list("cornoil" = 10)
 			required_catalysts = list("enzyme" = 5)
 			result_amount = 10
 
@@ -1675,7 +1683,7 @@ datum
 			name = "The Doctor's Delight"
 			id = "doctordelight"
 			result = "doctorsdelight"
-			required_reagents = list("limejuice" = 1, "tomatojuice" = 1, "orangejuice" = 1, "cream" = 1, "tricordrazine" = 1)
+			required_reagents = list("limejuice" = 1, "tomatojuice" = 1, "orangejuice" = 1, "cream" = 1)
 			result_amount = 5
 
 		irish_cream

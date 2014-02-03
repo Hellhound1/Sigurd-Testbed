@@ -42,6 +42,9 @@
 				M.take_organ_damage(20)
 
 
+/atom/proc/CheckParts()
+	return
+
 /atom/proc/assume_air(datum/gas_mixture/giver)
 	del(giver)
 	return null
@@ -292,7 +295,7 @@ its easier to just keep the beam vertical.
 		add_fibers(M)
 
 		//He has no prints!
-		if (mFingerprints in M.mutations)
+		if (M_FINGERPRINTS in M.mutations)
 			if(fingerprintslast != M.key)
 				fingerprintshidden += "(Has no fingerprints) Real name: [M.real_name], Key: [M.key]"
 				fingerprintslast = M.key

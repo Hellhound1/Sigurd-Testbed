@@ -141,19 +141,19 @@
 			for(var/atom/movable/A as mob|obj in src)//pulls everything out of the locker and hits it with an explosion
 				A.loc = src.loc
 				A.ex_act(severity++)
-			del(src)
+			qdel(src)
 		if(2)
 			if(prob(50))
 				for (var/atom/movable/A as mob|obj in src)
 					A.loc = src.loc
 					A.ex_act(severity++)
-				del(src)
+				qdel(src)
 		if(3)
 			if(prob(5))
 				for(var/atom/movable/A as mob|obj in src)
 					A.loc = src.loc
 					A.ex_act(severity++)
-				del(src)
+				qdel(src)
 
 /obj/structure/closet/bullet_act(var/obj/item/projectile/Proj)
 	health -= Proj.damage
@@ -166,7 +166,7 @@
 	return
 
 /obj/structure/closet/attack_animal(mob/living/simple_animal/user as mob)
-	if(user.wall_smash)
+	if(user.environment_smash)
 		visible_message("\red [user] destroys the [src]. ")
 		for(var/atom/movable/A as mob|obj in src)
 			A.loc = src.loc

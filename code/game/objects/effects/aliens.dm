@@ -58,7 +58,7 @@
 /obj/effect/alien/resin/proc/healthcheck()
 	if(health <=0)
 		density = 0
-		del(src)
+		qdel(src)
 	return
 
 /obj/effect/alien/resin/bullet_act(var/obj/item/projectile/Proj)
@@ -107,7 +107,7 @@
 	return
 
 /obj/effect/alien/resin/attack_hand()
-	if (HULK in usr.mutations)
+	if (M_HULK in usr.mutations)
 		usr << "\blue You easily destroy the [name]."
 		for(var/mob/O in oviewers(src))
 			O.show_message("\red [usr] destroys the [name]!", 1)
@@ -255,13 +255,13 @@ Alien plants should do something if theres a lot of poison
 /obj/effect/alien/weeds/ex_act(severity)
 	switch(severity)
 		if(1.0)
-			del(src)
+			qdel(src)
 		if(2.0)
 			if (prob(50))
-				del(src)
+				qdel(src)
 		if(3.0)
 			if (prob(5))
-				del(src)
+				qdel(src)
 	return
 
 /obj/effect/alien/weeds/attackby(var/obj/item/weapon/W, var/mob/user)

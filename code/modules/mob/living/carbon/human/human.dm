@@ -32,6 +32,11 @@
 	set_species("Vox")
 	..()
 
+/mob/living/carbon/human/skellington/New()
+	h_style = "Bald"
+	set_species("Skellington")
+	..()
+
 /mob/living/carbon/human/diona/New()
 	species = new /datum/species/diona(src)
 	..()
@@ -46,9 +51,13 @@
 	dna.mutantrace = "slime"
 	..()
 
+/mob/living/carbon/human/machine/New()
+	species = new /datum/species/machine(src)
+	..()
+
 /mob/living/carbon/human/grey/New()
 	set_species("Grey")
-	mutations.Add(mRemotetalk)
+	mutations.Add(M_REMOTE_TALK)
 	verbs += /mob/living/carbon/human/proc/remotesay
 	..()
 
@@ -122,8 +131,8 @@
 					slime.UpdateFeed()
 			return
 
-		if(istype(tmob, /mob/living/carbon/human) && (FAT in tmob.mutations))
-			if(prob(40) && !(FAT in src.mutations))
+		if(istype(tmob, /mob/living/carbon/human) && (M_FAT in tmob.mutations))
+			if(prob(40) && !(M_FAT in src.mutations))
 				src << "\red <B>You fail to push [tmob]'s fat ass out of the way.</B>"
 				now_pushing = 0
 				return
@@ -496,7 +505,7 @@
 //Returns "Unknown" if facially disfigured and real_name if not. Useful for setting name when polyacided or when updating a human's name variable
 /mob/living/carbon/human/proc/get_face_name()
 	var/datum/organ/external/head/head = get_organ("head")
-	if( !head || head.disfigured || (head.status & ORGAN_DESTROYED) || !real_name || (HUSK in mutations) )	//disfigured. use id-name if possible
+	if( !head || head.disfigured || (head.status & ORGAN_DESTROYED) || !real_name || (M_HUSK in mutations) )	//disfigured. use id-name if possible
 		return "Unknown"
 	return real_name
 
@@ -525,9 +534,9 @@
 		if(gloves)
 			var/obj/item/clothing/gloves/G = gloves
 			siemens_coeff = G.siemens_coefficient
-			//If they have shock immunity mutation
-		if(mShock in src.mutations)
-			siemens_coeff = 0
+	//If they have shock immunity mutation
+	if(M_NO_SHOCK in src.mutations)
+		siemens_coeff = 0
 	return ..(shock_damage,source,siemens_coeff)
 
 
@@ -953,7 +962,7 @@
 		remoteview_target = null
 		return
 
-	if(!(mMorph in mutations))
+	if(!(M_MORPH in mutations))
 		src.verbs -= /mob/living/carbon/human/proc/morph
 		return
 
@@ -1032,7 +1041,7 @@
 		remoteview_target = null
 		return
 
-	if(!(mRemotetalk in src.mutations))
+	if(!(M_REMOTE_TALK in src.mutations))
 		src.verbs -= /mob/living/carbon/human/proc/remotesay
 		return
 	var/list/creatures = list()
@@ -1043,7 +1052,7 @@
 		return
 
 	var/say = input ("What do you wish to say")
-	if(mRemotetalk in target.mutations)
+	if(M_REMOTE_TALK in target.mutations)
 		target.show_message("\blue You hear [src.real_name]'s voice: [say]")
 	else
 		target.show_message("\blue You hear a voice that seems to echo around the room: [say]")
@@ -1060,7 +1069,7 @@
 		reset_view(0)
 		return
 
-	if(!(mRemote in src.mutations))
+	if(!(M_REMOTE_VIEW in src.mutations))
 		remoteview_target = null
 		reset_view(0)
 		src.verbs -= /mob/living/carbon/human/proc/remoteobserve
@@ -1082,6 +1091,8 @@
 	for(var/mob/living/carbon/h in world)
 		var/turf/temp_turf = get_turf(h)
 		if((temp_turf.z != 1 && temp_turf.z != 5) || h.stat!=CONSCIOUS) //Not on mining or the station. Or dead
+			continue
+		if(M_PSY_RESIST in h.mutations)
 			continue
 		creatures += h
 
@@ -1384,6 +1395,7 @@ mob/living/carbon/human/yank_out_object()
 		update_icons()
 
 	if(species)
+		species.handle_post_spawn(src)
 		return 1
 	else
 		return 0
@@ -1446,3 +1458,14 @@ mob/living/carbon/human/yank_out_object()
 		drop_from_inventory(head)
 		update_hair()
 		update_body()
+
+/mob/living/carbon/human/canSingulothPull(var/obj/machinery/singularity/singulo)
+	if(!..())
+		return 0
+
+	if(istype(shoes,/obj/item/clothing/shoes/magboots))
+		var/obj/item/clothing/shoes/magboots/M = shoes
+		if(M.magpulse)
+			return 0
+	return 1
+

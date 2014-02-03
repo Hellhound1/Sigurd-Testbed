@@ -31,6 +31,7 @@
 
 	O.dna = dna.Clone()
 	O.dna.SetSEState(MONKEYBLOCK,1)
+	O.dna.SetSEValueRange(MONKEYBLOCK,0xDAC, 0xFFF)
 	O.loc = loc
 	O.viruses = viruses
 	O.a_intent = "harm"
@@ -364,7 +365,7 @@
 		return 1
 	if(ispath(MP, /mob/living/simple_animal/hostile/carp))
 		return 1
-	if(ispath(MP, /mob/living/simple_animal/mushroom))
+	if(ispath(MP, /mob/living/simple_animal/hostile/mushroom))
 		return 1
 	if(ispath(MP, /mob/living/simple_animal/shade))
 		return 1

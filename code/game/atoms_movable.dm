@@ -72,7 +72,7 @@
 	src.throwing = 1
 
 	if(usr)
-		if(HULK in usr.mutations)
+		if(M_HULK in usr.mutations)
 			src.throwing = 2 // really strong throw!
 
 	var/dist_x = abs(target.x - src.x)
@@ -184,3 +184,10 @@
 	if (src.master)
 		return src.master.attack_hand(a, b, c)
 	return
+
+/////////////////////////////
+// SINGULOTH PULL REFACTOR
+/////////////////////////////
+/atom/movable/proc/canSingulothPull(var/obj/machinery/singularity/singulo)
+	return 1
+

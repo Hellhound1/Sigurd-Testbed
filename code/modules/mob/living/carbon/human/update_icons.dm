@@ -113,15 +113,15 @@ Please contact me on #coderbus IRC. ~Carn x
 #define HAIR_LAYER				14		//TODO: make part of head layer?
 #define FACEMASK_LAYER			15
 #define HEAD_LAYER				16
-#define HANDCUFF_LAYER			17
-#define LEGCUFF_LAYER			18
-#define L_HAND_LAYER			19
-#define R_HAND_LAYER			20
-#define TAIL_LAYER				21		//bs12 specific. this hack is probably gonna come back to haunt me
-#define TARGETED_LAYER			22		//BS12: Layer for the target overlay from weapon targeting system
-#define FIRE_LAYER				23    //If you're on fire
-#define TOTAL_LAYERS			23
-//////////////////////////////////
+#define COLLAR_LAYER			17
+#define HANDCUFF_LAYER			18
+#define LEGCUFF_LAYER			19
+#define TAIL_LAYER				20		//bs12 specific. this hack is probably gonna come back to haunt me
+#define L_HAND_LAYER			21
+#define R_HAND_LAYER			22
+#define TARGETED_LAYER			23		//BS12: Layer for the target overlay from weapon targeting system
+#define FIRE_LAYER				24    //If you're on fire
+#define TOTAL_LAYERS			24
 
 /mob/living/carbon/human
 	var/list/overlays_standing[TOTAL_LAYERS]
@@ -230,9 +230,9 @@ proc/get_damage_icon_part(damage_state, body_part)
 	var/hulk_color_mod = rgb(48,224,40)
 	var/necrosis_color_mod = rgb(10,50,0)
 
-	var/husk = (HUSK in src.mutations)  //100% unnecessary -Agouri	//nope, do you really want to iterate through src.mutations repeatedly? -Pete
-	var/fat = (FAT in src.mutations)
-	var/hulk = (HULK in src.mutations)
+	var/husk = (M_HUSK in src.mutations)  //100% unnecessary -Agouri	//nope, do you really want to iterate through src.mutations repeatedly? -Pete
+	var/fat = (M_FAT in src.mutations)
+	var/hulk = (M_HULK in src.mutations)
 	var/skeleton = (SKELETON in src.mutations)
 
 	var/g = "m"
@@ -376,7 +376,7 @@ proc/get_damage_icon_part(damage_state, body_part)
 
 /mob/living/carbon/human/update_mutations(var/update_icons=1)
 	var/fat
-	if(FAT in mutations)
+	if(M_FAT in mutations)
 		fat = "fat"
 
 	var/image/standing	= image("icon" = 'icons/effects/genetics.dmi')
@@ -394,22 +394,29 @@ proc/get_damage_icon_part(damage_state, body_part)
 	for(var/mut in mutations)
 		switch(mut)
 			/*
-			if(HULK)
+			if(M_HULK)
 				if(fat)
 					standing.underlays	+= "hulk_[fat]_s"
 				else
 					standing.underlays	+= "hulk_[g]_s"
 				add_image = 1
-			if(COLD_RESISTANCE)
+			if(M_RESIST_COLD)
 				standing.underlays	+= "fire[fat]_s"
+				add_image = 1
+			if(M_RESIST_HEAT)
+				standing.underlays	+= "cold[fat]_s"
 				add_image = 1
 			if(TK)
 				standing.underlays	+= "telekinesishead[fat]_s"
 				add_image = 1
 			*/
-			if(LASER)
+			if(M_LASER)
 				standing.overlays	+= "lasereyes_s"
 				add_image = 1
+	if((M_RESIST_COLD in mutations) && (M_RESIST_HEAT in mutations))
+		standing.underlays	-= "cold[fat]_s"
+		standing.underlays	-= "fire[fat]_s"
+		standing.underlays	+= "coldfire[fat]_s"
 	if(add_image)
 		overlays_standing[MUTATIONS_LAYER]	= standing
 	else
@@ -419,7 +426,7 @@ proc/get_damage_icon_part(damage_state, body_part)
 
 /mob/living/carbon/human/proc/update_mutantrace(var/update_icons=1)
 	var/fat
-	if( FAT in mutations )
+	if( M_FAT in mutations )
 		fat = "fat"
 //	var/g = "m"
 //	if (gender == FEMALE)	g = "f"
@@ -508,7 +515,7 @@ proc/get_damage_icon_part(damage_state, body_part)
 		if(!t_color)		t_color = icon_state
 		var/image/standing	= image("icon_state" = "[t_color]_s")
 
-		if(FAT in mutations)
+		if(M_FAT in mutations)
 			if(w_uniform.flags&ONESIZEFITSALL)
 				standing.icon	= 'icons/mob/uniform_fat.dmi'
 			else
@@ -678,7 +685,7 @@ proc/get_damage_icon_part(damage_state, body_part)
 
 		var/image/standing  = image("icon" = dmi, "icon_state" = "[wear_suit.icon_state]")
 
-		if(FAT in mutations)
+		if(M_FAT in mutations)
 			if(wear_suit.flags&ONESIZEFITSALL)
 				standing.icon	= 'icons/mob/suit_fat.dmi'
 			else
@@ -717,6 +724,8 @@ proc/get_damage_icon_part(damage_state, body_part)
 		overlays_standing[SUIT_LAYER]	= null
 
 		update_tail_showing(0)
+
+	update_collar(0)
 
 	if(update_icons)   update_icons()
 
@@ -833,12 +842,28 @@ proc/get_damage_icon_part(damage_state, body_part)
 /mob/living/carbon/human/proc/update_tail_showing(var/update_icons=1)
 	overlays_standing[TAIL_LAYER] = null
 
-	if(species.tail && species.flags & HAS_TAIL)
+	if(species.tail && species.bodyflags & HAS_TAIL)
 		if(!wear_suit || !(wear_suit.flags_inv & HIDEJUMPSUIT) && !istype(wear_suit, /obj/item/clothing/suit/space))
 			overlays_standing[TAIL_LAYER] = image("icon" = 'icons/effects/species.dmi', "icon_state" = "[species.tail]_s")
 
 	if(update_icons)
 		update_icons()
+
+
+//Adds a collar overlay above the helmet layer if the suit has one
+//	Suit needs an identically named sprite in icons/mob/collar.dmi
+/mob/living/carbon/human/proc/update_collar(var/update_icons=1)
+	var/icon/C = new('icons/mob/collar.dmi')
+	var/image/standing = null
+
+	if(wear_suit)
+		if(wear_suit.icon_state in C.IconStates())
+			standing = image("icon" = C, "icon_state" = "[wear_suit.icon_state]")
+
+	overlays_standing[COLLAR_LAYER]	= standing
+
+	if(update_icons)   update_icons()
+
 
 // Used mostly for creating head items
 /mob/living/carbon/human/proc/generate_head_icon()
@@ -892,6 +917,7 @@ proc/get_damage_icon_part(damage_state, body_part)
 #undef BACK_LAYER
 #undef HAIR_LAYER
 #undef HEAD_LAYER
+#undef COLLAR_LAYER
 #undef HANDCUFF_LAYER
 #undef LEGCUFF_LAYER
 #undef L_HAND_LAYER

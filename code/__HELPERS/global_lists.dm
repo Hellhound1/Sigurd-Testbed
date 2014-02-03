@@ -19,6 +19,7 @@ var/global/list/landmarks_list = list()				//list of all landmarks created
 var/global/list/surgery_steps = list()				//list of all surgery steps  |BS12
 var/global/list/side_effects = list()				//list of all medical sideeffects types by thier names |BS12
 var/global/list/mechas_list = list()				//list of all mechs. Used by hostile mobs target tracking.
+var/global/list/table_recipes = list()        //list of all table craft recipes
 
 //Languages/species/whitelist.
 var/global/list/all_species[0]
@@ -38,8 +39,8 @@ var/global/list/facial_hair_styles_male_list = list()
 var/global/list/facial_hair_styles_female_list = list()
 var/global/list/skin_styles_female_list = list()		//unused
 	//Underwear
-var/global/list/underwear_m = list("White", "Grey", "Green", "Blue", "Black", "Mankini", "Love-Hearts", "Black2", "Grey2", "Stripey", "Kinky", "None") //Curse whoever made male/female underwear diffrent colours
-var/global/list/underwear_f = list("Red", "White", "Yellow", "Blue", "Black", "Thong", "Babydoll", "Baby-Blue", "Green", "Pink", "Kinky", "None")
+var/global/list/underwear_m = list("White", "Grey", "Green", "Blue", "Black", "Mankini", "None") //Curse whoever made male/female underwear diffrent colours
+var/global/list/underwear_f = list("Red", "White", "Yellow", "Blue", "Black", "Thong", "None")
 	//Backpacks
 var/global/list/backbaglist = list("Nothing", "Backpack", "Satchel", "Satchel Alt")
 
@@ -102,6 +103,8 @@ var/global/list/backbaglist = list("Nothing", "Backpack", "Satchel", "Satchel Al
 		if(S.flags & IS_WHITELISTED)
 			whitelisted_species += S.name
 
+	init_subtypes(/datum/table_recipe, table_recipes)
+
 /* // Uncomment to debug chemical reaction list.
 /client/verb/debug_chemical_list()
 
@@ -113,3 +116,13 @@ var/global/list/backbaglist = list("Nothing", "Backpack", "Satchel", "Satchel Al
 				. += "    has: [t]\n"
 	world << .
 */
+
+
+//creates every subtype of prototype (excluding prototype) and adds it to list L.
+//if no list/L is provided, one is created.
+/proc/init_subtypes(prototype, list/L)
+        if(!istype(L))        L = list()
+        for(var/path in typesof(prototype))
+                if(path == prototype)        continue
+                L += new path()
+        return L

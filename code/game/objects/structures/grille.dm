@@ -40,13 +40,13 @@
 
 
 /obj/structure/grille/ex_act(severity)
-	del(src)
+	qdel(src)
 
 /obj/structure/grille/blob_act()
-	del(src)
+	qdel(src)
 
 /obj/structure/grille/meteorhit(var/obj/M)
-	del(src)
+	qdel(src)
 
 
 /obj/structure/grille/Bumped(atom/user)
@@ -64,7 +64,7 @@
 
 	if(shock(user, 70))
 		return
-	if(HULK in user.mutations)
+	if(M_HULK in user.mutations)
 		health -= 5
 	else
 		health -= 3
