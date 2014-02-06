@@ -3157,13 +3157,14 @@ datum
 					M:drowsyness  = max(M:drowsyness, 0)
 				if(d >= pass_out)
 					M:paralysis = max(M:paralysis, 20/sober_str)
-					M:drowsyness  = max(M:drowsyness, 30/sober_str)
+					M:drowsyness  = max(M:drowsyness, 40/sober_str)
 					if(ishuman(M))
 						var/mob/living/carbon/human/H = M
 						var/datum/organ/internal/liver/L = H.internal_organs["liver"]
 						if (istype(L))
 							L.take_damage(0.1, 1)
 						H.adjustToxLoss(0.1)
+						
 
 				holder.remove_reagent(src.id, 0.4)
 				..()
