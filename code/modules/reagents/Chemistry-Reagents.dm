@@ -3152,18 +3152,28 @@ datum
 				if(d >= confused_start && prob(33))
 					if (!M:confused) M:confused = 1
 					M.confused = max(M:confused+(confused_adj/sober_str),0)
+					if(ishuman(M))
+						var/mob/living/carbon/human/H = M	
+						H.adjustToxLoss(0.1)
 				if(d >= blur_start)
 					M.eye_blurry = max(M.eye_blurry, 10/sober_str)
 					M:drowsyness  = max(M:drowsyness, 0)
+					if(ishuman(M))
+						var/mob/living/carbon/human/H = M	
+						H.adjustToxLoss(1)
 				if(d >= pass_out)
 					M:paralysis = max(M:paralysis, 20/sober_str)
-					M:drowsyness  = max(M:drowsyness, 30/sober_str)
+					M:drowsyness  = max(M:drowsyness, 40/sober_str)
 					if(ishuman(M))
 						var/mob/living/carbon/human/H = M
 						var/datum/organ/internal/liver/L = H.internal_organs["liver"]
 						if (istype(L))
-							L.take_damage(0.1, 1)
-						H.adjustToxLoss(0.1)
+							L.take_damage(1, 3)
+						var/datum/organ/internal/kidney/K = H.internal_organs["kidney"]
+						if (istype(K))
+							K.take_damage(1, 3)							
+						H.adjustToxLoss(3)
+						
 
 				holder.remove_reagent(src.id, 0.4)
 				..()
