@@ -495,7 +495,13 @@
 	// do APC interaction
 	user.set_machine(src)
 	src.interact(user)
-
+	var/perapc = 0
+	perapc = terminal.powernet.perapc
+	var/ch = min(perapc*CELLRATE, (cell.maxcharge - cell.charge), (cell.maxcharge*CHARGELEVEL))
+	add_load(ch/CELLRATE) // Removes the power we're taking from the grid
+	cell.give(ch) // actually recharge the cell
+	charging = 1
+	
 /obj/machinery/power/apc/attack_alien(mob/living/carbon/alien/humanoid/user)
 	if(!user)
 		return
