@@ -1003,7 +1003,7 @@ var/list/all_supply_groups = list("Operations","Security","Hospitality","Enginee
 	containertype = /obj/structure/closet/crate/secure/large
 	containername = "Supermatter Crystal Crate"
 	group = "Engineering"
-	access = access_engine
+	access = access_ce
 
 /datum/supply_packs/bee_keeper
 	name = "Beekeeping Crate"
