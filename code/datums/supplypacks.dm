@@ -995,6 +995,15 @@ var/list/all_supply_groups = list("Operations","Security","Hospitality","Enginee
 	containername = "Atmospheric circulator crate"
 	group = "Engineering"
 	access = access_engine
+	
+/datum/supply_packs/supermatter_crystal
+	contains = list(/obj/machinery/power/supermatter)
+	name = "Supermatter Crystal"
+	cost = 100
+	containertype = /obj/structure/closet/crate/secure/large
+	containername = "Supermatter Crystal Crate"
+	group = "Engineering"
+	access = access_engine
 
 /datum/supply_packs/bee_keeper
 	name = "Beekeeping Crate"
