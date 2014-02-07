@@ -2190,6 +2190,14 @@ datum
 						H.Weaken(10)
 				..()
 				return
+				
+		heroin
+			name = "Heroin"
+			id = "heroin"
+			description = "A specific chemical based on Potassium Chloride to stop the heart for surgery. Not safe to eat!"
+			reagent_state = SOLID
+			color = "#FFFFFF" // rgb: 255,255,255
+			overdose = 20
 
 
 
@@ -3160,7 +3168,7 @@ datum
 					M:drowsyness  = max(M:drowsyness, 0)
 					if(ishuman(M))
 						var/mob/living/carbon/human/H = M	
-						H.adjustToxLoss(1)
+						H.adjustToxLoss(0.5)
 				if(d >= pass_out)
 					M:paralysis = max(M:paralysis, 20/sober_str)
 					M:drowsyness  = max(M:drowsyness, 40/sober_str)
@@ -3168,11 +3176,11 @@ datum
 						var/mob/living/carbon/human/H = M
 						var/datum/organ/internal/liver/L = H.internal_organs["liver"]
 						if (istype(L))
-							L.take_damage(1, 3)
+							L.take_damage(0.1, 2)
 						var/datum/organ/internal/kidney/K = H.internal_organs["kidney"]
 						if (istype(K))
-							K.take_damage(1, 3)							
-						H.adjustToxLoss(3)
+							K.take_damage(0.5, 2)							
+						H.adjustToxLoss(1)
 						
 
 				holder.remove_reagent(src.id, 0.4)
