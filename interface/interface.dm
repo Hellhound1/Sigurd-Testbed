@@ -11,7 +11,7 @@
 		src << "\red The wiki URL is not set in the server configuration."
 	return
 
-#define CHANGELOG "http://80.244.78.90/phpBB3/viewtopic.php?f=10&t=36"
+#define CHANGELOG "http://z13.invisionfree.com/Sigurd_Forum/index.php?showtopic=422"
 /client/verb/changes()
 	set name = "Changelog"
 	set desc = "Visit the forum to check out the changelog."
