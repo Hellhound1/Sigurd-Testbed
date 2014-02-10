@@ -1479,7 +1479,7 @@ window "rpane"
 		right-click = false
 		saved-params = "is-checked"
 		on-size = ""
-		text = "Donate"
+		text = "Bug Track"
 		image = ""
 		command = "Donate"
 		is-flat = false
