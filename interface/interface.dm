@@ -43,13 +43,13 @@
 	src << browse(file(RULES_FILE), "window=rules;size=480x320")
 #undef RULES_FILE
 
-#define DONATE "http://80.244.78.90/phpBB3/donate.php"
+#define DONATE "https://github.com/melandor0/Sigurd-Paracode/issues"
 /client/verb/donate()
 	set name = "Donate"
 	set desc = "Donate to help with development costs."
 	set hidden = 1
 
-	if(alert("This will open the changelog in your browser. Are you sure?",,"Yes","No")=="No")
+	if(alert("This will open the Bug Tracker in your browser. Are you sure?",,"Yes","No")=="No")
 		return
 	src << link(DONATE)
 	return
