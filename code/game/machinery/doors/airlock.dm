@@ -285,7 +285,7 @@
 /obj/machinery/door/airlock/highsecurity/red
 	name = "Secure Armory Airlock"
 	hackProof = 0
-	aiControlDisabled = 1
+	aiControlDisabled = 0
 
 /*
 About the new airlock wires panel:
