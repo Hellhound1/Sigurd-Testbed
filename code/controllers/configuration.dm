@@ -48,7 +48,7 @@
 	var/list/votable_modes = list()		// votable modes
 	var/list/probabilities = list()		// relative probability of each mode
 	var/humans_need_surnames = 0
-	var/allow_random_events = 1			// enables random events mid-round when set to 1
+	var/allow_random_events = 0			// enables random events mid-round when set to 1
 	var/allow_ai = 1					// allow ai job
 	var/hostedby = null
 	var/respawn = 0
@@ -266,6 +266,12 @@
 
 				if ("vote_period")
 					config.vote_period = text2num(value)
+					
+				if ("vote_autotransfer_initial")
+					config.vote_autotransfer_initial = text2num(value)
+					
+				if ("vote_autotransfer_interval")
+					config.vote_autotransfer_interval = text2num(value)
 
 				if ("allow_ai")
 					config.allow_ai = 1
