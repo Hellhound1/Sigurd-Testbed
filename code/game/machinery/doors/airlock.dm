@@ -284,7 +284,7 @@
 
 /obj/machinery/door/airlock/highsecurity/red
 	name = "Secure Armory Airlock"
-	hackProof = 1
+	hackProof = 0
 	aiControlDisabled = 1
 
 /*
