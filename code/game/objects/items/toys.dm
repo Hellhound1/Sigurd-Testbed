@@ -121,8 +121,8 @@
 /obj/item/toy/gun
 	name = "cap gun"
 	desc = "There are 0 caps left. Looks almost like the real thing! Ages 8 and up. Please recycle in an autolathe when you're out of caps!"
-	icon = 'icons/obj/toy.dmi'
-	icon_state = "capgun"
+	icon = 'icons/obj/gun.dmi'
+	icon_state = "revolver"
 	item_state = "gun"
 	flags =  FPRINT | TABLEPASS | CONDUCT
 	slot_flags = SLOT_BELT
