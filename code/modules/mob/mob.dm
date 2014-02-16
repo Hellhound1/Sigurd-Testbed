@@ -696,6 +696,13 @@ var/list/slot_equipment_priority = list( \
 			client.adminobs = 1
 			if(mob_eye == client.mob || client.eye == client.mob)
 				client.adminobs = 0
+				
+/mob/verb/show_server_version()
+	set name = "Show Server Version"
+	set category = "OOC"
+	set desc = "Shows you the version of code the server is running on. Identifiable by date."
+	
+	usr << "Server Version #130214"
 
 /mob/verb/cancel_camera()
 	set name = "Cancel Camera View"
