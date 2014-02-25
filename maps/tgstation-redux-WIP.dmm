@@ -10966,7 +10966,7 @@
 "ecT" = (/obj/machinery/light{dir = 1; in_use = 1},/obj/structure/disposalpipe/segment{dir = 4},/turf/simulated/floor{icon_state = "vault"; dir = 5},/area/traitor/chem)
 "ecU" = (/obj/machinery/door/airlock/glass,/obj/structure/disposalpipe/segment{dir = 4},/turf/simulated/floor{icon_state = "vault"; dir = 5},/area/traitor/hall)
 "ecV" = (/obj/structure/disposalpipe/segment{dir = 4},/turf/simulated/floor{icon_state = "vault"; dir = 5},/area/traitor/hall)
-"ecW" = (/obj/structure/disposalpipe/segment{dir = 4},/obj/machinery/access_button{command = "cycle_exterior"; frequency = 1479; master_tag = "traitor_station_airlock"; name = "exterior access button"; pixel_x = 25; pixel_y = 25; req_access_txt = null},/turf/simulated/floor{icon_state = "vault"; dir = 5},/area/traitor/hall)
+"ecW" = (/obj/structure/disposalpipe/segment{dir = 4},/obj/machinery/access_button{command = "cycle_interior"; frequency = 1479; master_tag = "traitor_station_airlock"; name = "exterior access button"; pixel_x = 25; pixel_y = 25; req_access_txt = null},/turf/simulated/floor{icon_state = "vault"; dir = 5},/area/traitor/hall)
 "ecX" = (/obj/structure/disposalpipe/segment{dir = 2; icon_state = "pipe-c"},/turf/simulated/floor{icon_state = "vault"; dir = 5},/area/traitor/hall)
 "ecY" = (/obj/machinery/door/airlock/glass,/turf/simulated/floor,/area/traitor/hall)
 "ecZ" = (/obj/structure/cable{d1 = 1; d2 = 2; icon_state = "1-2"; tag = ""},/obj/structure/disposalpipe/segment,/turf/simulated/floor,/area/traitor/kitchen)
