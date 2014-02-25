@@ -192,7 +192,7 @@
 		if (z_co == 7 & src.emagged == 1)
 		// This should be empty, allows for it to continue if the z-level is 7 and the machine is emagged.
 		else
-			usr << "\red Error: Z is less than 1, greater than [src.emagged ? "6" : "7"], or equal to 2."
+			usr << "\red Error: Z is less than 1, greater than [src.emagged ? "7" : "6"], or equal to 2."
 			fail = 1
 	if(istype(get_area(locate(x_co,y_co,z_co)), /area/security/armoury/gamma))
 		usr << "\red Error: Attempting to access telescience-protected area."
