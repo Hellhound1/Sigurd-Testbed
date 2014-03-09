@@ -80,7 +80,7 @@
 	w_class = 2
 	silenced = 0
 	origin_tech = "combat=2;materials=2;syndicate=2"
-	mag_type = "/obj/item/ammo_box/magazine/m10mm"
+	mag_type = "/obj/item/ammo_box/magazine/m9mm"
 
 /obj/item/weapon/gun/projectile/automatic/pistol/attack_hand(mob/user as mob)
 	if(loc == user)
