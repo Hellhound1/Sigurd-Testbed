@@ -29,6 +29,7 @@
 	desc = "The subject suffers from constant radiation sickness and causes the same on nearby organics."
 	activation_message = "You feel a strange sickness permeate your whole body."
 	deactivation_message = "You no longer feel awful and sick all over."
+	instability=5
 
 	New()
 		..()
@@ -66,6 +67,7 @@
 // SPEECH MANIPULATORS //
 /////////////////////////
 
+/* Duplicate
 // WAS: /datum/bioEffect/stutter
 /datum/dna/gene/disability/stutter
 	name = "Stutter"
@@ -87,6 +89,7 @@
 		if(is_type_in_list(/datum/dna/gene/disability/speech,M.active_genes))
 			return 0
 		return ..(M,flags)
+*/
 
 /* Figure out what the fuck this one does.
 // WAS: /datum/bioEffect/smile
@@ -130,6 +133,7 @@
 		block=CHAVBLOCK
 
 	OnSay(var/mob/M, var/message)
+		// THIS ENTIRE THING BEGS FOR REGEX
 		message = replacetext(message,"dick","prat")
 		message = replacetext(message,"comdom","knob'ead")
 		message = replacetext(message,"looking at","gawpin' at")
@@ -144,7 +148,7 @@
 		message = replacetext(message,"i don't know","wot mate")
 		message = replacetext(message,"no","naw")
 		message = replacetext(message,"robust","chin")
-		message = replacetext(message,"hi","how what how")
+		message = replacetext(message," hi ","how what how")
 		message = replacetext(message,"hello","sup bruv")
 		message = replacetext(message,"kill","bang")
 		message = replacetext(message,"murder","bang")
@@ -213,6 +217,7 @@
 	desc = "Causes the subject's digestion to create a significant amount of noxious gas."
 	activation_message = "Your stomach grumbles unpleasantly."
 	deactivation_message = "Your stomach stops acting up. Phew!"
+	instability=2
 
 	mutation = M_TOXIC_FARTS
 
@@ -288,6 +293,7 @@
 	desc = "The subject becomes able to convert excess cellular energy into thermal energy."
 	activation_messages = list("You suddenly feel rather hot.")
 	deactivation_messages = list("You no longer feel uncomfortably hot.")
+	instability=5
 
 	spelltype=/obj/effect/proc_holder/spell/targeted/immolate
 
@@ -308,16 +314,17 @@
 	invocation_type = "none"
 	range = -1
 	selection_type = "range"
+	var/list/compatible_mobs = list(/mob/living/carbon/human, /mob/living/carbon/monkey)
+	include_user = 1
 
 /obj/effect/proc_holder/spell/targeted/immolate/cast(list/targets)
-	if (istype(usr,/mob/living/))
-		var/mob/living/L = usr
+	var/mob/living/L = usr
 
-		L.adjust_fire_stacks(0.5) // Same as walking into fire. Was 100 (goon fire)
-		L.visible_message("\red <b>[L.name]</b> suddenly bursts into flames!")
-		//playsound(L.loc, 'mag_fireballlaunch.ogg', 50, 0)
-
-	return
+	L.adjust_fire_stacks(0.5) // Same as walking into fire. Was 100 (goon fire)
+	L.visible_message("\red <b>[L.name]</b> suddenly bursts into flames!")
+	L.on_fire = 1
+	L.update_icon = 1
+	playsound(L.loc, 'sound/effects/bamf.ogg', 50, 0)
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -327,6 +334,7 @@
 	desc = "The subject becomes able to transform the matter of their cells into a liquid state."
 	activation_messages = list("You feel strange and jiggly.")
 	deactivation_messages = list("You feel more solid.")
+	instability=2
 
 	verbtype=/proc/bioproc_melt
 

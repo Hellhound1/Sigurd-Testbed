@@ -57,6 +57,7 @@ datum/preferences
 	var/age = 30						//age of character
 	var/b_type = "A+"					//blood type (not-chooseable)
 	var/underwear = 1					//underwear type
+	var/undershirt = 1					//undershirt type
 	var/backbag = 2						//backpack type
 	var/h_style = "Bald"				//Hair type
 	var/r_hair = 0						//Hair color
@@ -125,6 +126,8 @@ datum/preferences
 	// Whether or not to use randomized character slots
 	var/randomslot = 0
 
+	// jukebox volume
+	var/volume = 100
 /datum/preferences/New(client/C)
 	b_type = pick(4;"O-", 36;"O+", 3;"A-", 28;"A+", 1;"B-", 20;"B+", 1;"AB-", 5;"AB+")
 	if(istype(C))
@@ -148,7 +151,6 @@ datum/preferences
 		dat += "<a href='?_src_=prefs;preference=tab;tab=1' [current_tab == 1 ? "class='linkOn'" : ""]>Game Preferences</a>"
 		if(!path)
 			dat += "Please create an account to save your preferences."
-
 
 		dat += "</center>"
 		dat += "<HR>"
@@ -265,6 +267,7 @@ datum/preferences
 					dat += "Underwear: <a href ='?_src_=prefs;preference=underwear;task=input'><b>[underwear_m[underwear]]</b></a><br>"
 				else
 					dat += "Underwear: <a href ='?_src_=prefs;preference=underwear;task=input'><b>[underwear_f[underwear]]</b></a><br>"
+				dat += "Undershirt: <a href='?_src_=prefs;preference=undershirt;task=input'><b>[undershirt_t[undershirt]]</b></a><br>"
 				dat += "Backpack Type:<br><a href ='?_src_=prefs;preference=bag;task=input'><b>[backbaglist[backbag]]</b></a><br>"
 				dat += "Nanotrasen Relation:<br><a href ='?_src_=prefs;preference=nt_relation;task=input'><b>[nanotrasen_relation]</b></a><br>"
 				dat += "</td><td><b>Preview</b><br><img src=previewicon.png height=64 width=64><img src=previewicon2.png height=64 width=64></td></tr></table>"
@@ -920,6 +923,9 @@ datum/preferences
 					if("underwear")
 						underwear = rand(1,underwear_m.len)
 						ShowChoices(user)
+					if("undershirt")
+						undershirt = rand(1,undershirt_t.len)
+						ShowChoices(user)
 					if("eyes")
 						r_eyes = rand(0,255)
 						g_eyes = rand(0,255)
@@ -1097,6 +1103,15 @@ datum/preferences
 							underwear = underwear_options.Find(new_underwear)
 						ShowChoices(user)
 
+					if("undershirt")
+						var/list/undershirt_options
+						undershirt_options = undershirt_t
+
+						var/new_undershirt = input(user, "Choose your character's undershirt:", "Character Preference") as null|anything in undershirt_options
+						if (new_undershirt)
+							undershirt = undershirt_options.Find(new_undershirt)
+						ShowChoices(user)
+
 					if("accent")
 						var/new_accent = input(user, "Choose your accent. en-us:American, en:British, en-sc:Scottish, mb-de4-en:German, mb-fr1-en:French", "Character Preference") as null|anything in list("en-us", "en", "en-sc","mb-de4-en","mb-fr1-en")
 						if(new_accent)
@@ -1147,7 +1162,7 @@ datum/preferences
 						var/msg = input(usr,"Set the flavor text in your 'examine' verb. This can also be used for OOC notes and preferences!","Flavor Text",html_decode(flavor_text)) as message
 
 						if(msg != null)
-							msg = copytext(msg, 1, MAX_MESSAGE_LEN)
+							msg = copytext(msg, 1, MAX_PAPER_MESSAGE_LEN)
 							msg = html_encode(msg)
 
 							flavor_text = msg
@@ -1402,6 +1417,10 @@ datum/preferences
 		if(underwear > underwear_m.len || underwear < 1)
 			underwear = 0 //I'm sure this is 100% unnecessary, but I'm paranoid... sue me. //HAH NOW NO MORE MAGIC CLONING UNDIES
 		character.underwear = underwear
+
+		if(undershirt > undershirt_t.len || undershirt < 1)
+			undershirt = 0
+		character.undershirt = undershirt
 
 		if(backbag > 4 || backbag < 1)
 			backbag = 1 //Same as above

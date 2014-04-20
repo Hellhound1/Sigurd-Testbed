@@ -220,11 +220,9 @@
 			C.ear_deaf = 20
 			C.stuttering = 20
 			C.Stun(8)
-			C.make_jittery(150)
+			C.Jitter(150)
 		for(var/obj/structure/window/W in oview(3))
-			new W.shardtype(W.loc)
-			if(W.reinf) new /obj/item/stack/rods(W.loc)
-			del(W)
+			W.destroy()
 		playsound(M.current.loc, 'sound/effects/creepyshriek.ogg', 100, 1)
 		M.current.remove_vampire_blood(30)
 		M.current.verbs -= /client/vampire/proc/vampire_screech

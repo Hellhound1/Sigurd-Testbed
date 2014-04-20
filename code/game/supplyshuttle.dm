@@ -82,7 +82,7 @@ var/list/mechtoys = list(
 			T.blocks_air = 1
 		..()
 
-	Del() //lazy hack to set the turf to allow air to pass if it's a simulated floor
+	Destroy() //lazy hack to set the turf to allow air to pass if it's a simulated floor
 		var/turf/T = get_turf(loc)
 		if(T)
 			if(istype(T, /turf/simulated/floor))
@@ -504,7 +504,7 @@ var/list/mechtoys = list(
 			if (stat & BROKEN)
 				user << "\blue The broken glass falls out."
 				var/obj/structure/computerframe/A = new /obj/structure/computerframe( loc )
-				new /obj/item/weapon/shard( loc )
+				getFromPool(/obj/item/weapon/shard, loc)
 				var/obj/item/weapon/circuitboard/supplycomp/M = new /obj/item/weapon/circuitboard/supplycomp( A )
 				for (var/obj/C in src)
 					C.loc = loc

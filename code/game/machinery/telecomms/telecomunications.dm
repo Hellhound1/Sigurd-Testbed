@@ -91,7 +91,9 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 			"type" = signal.data["type"],
 			"server" = signal.data["server"],
 			"reject" = signal.data["reject"],
-			"level" = signal.data["level"]
+			"level" = signal.data["level"],
+			"verb" = signal.data["verb"],
+			"language" = signal.data["language"]
 			)
 
 			// Keep the "original" signal constant
@@ -626,10 +628,6 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	var/name = "data packet (#)"
 	var/garbage_collector = 1 // if set to 0, will not be garbage collected
 	var/input_type = "Speech File"
-
-
-
-
 
 
 
