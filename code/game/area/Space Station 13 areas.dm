@@ -1707,7 +1707,6 @@ proc/process_ghost_teleport_locs()
 //GAYBAR
 /area/secret/gaybar
 	name = "\improper Dance Bar"
-	requires_power = 0
 	icon_state = "dancebar"
 
 //Traitor Station
@@ -2085,6 +2084,7 @@ var/list/the_station_areas = list (
 	/area/hallway/primary/central,
 	/area/bridge,
 	/area/crew_quarters,
+	/area/civilian,
 	/area/holodeck,
 	/area/library,
 	/area/chapel,
@@ -2095,6 +2095,7 @@ var/list/the_station_areas = list (
 	/area/teleporter,
 	/area/medical,
 	/area/security,
+	/area/prison,
 	/area/quartermaster,
 	/area/janitor,
 	/area/hydroponics,

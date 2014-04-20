@@ -12,8 +12,8 @@
 	access = list(access_security, access_sec_doors, access_brig, access_armory, access_court,
 			            access_forensics_lockers, access_morgue, access_maint_tunnels, access_all_personal_lockers,
 			            access_research, access_engine, access_mining, access_medical, access_construction, access_mailsorting,
-			            access_heads, access_hos, access_RC_announce, access_keycard_auth, access_gateway, access_customs)
-	minimal_access = list(access_security, access_sec_doors, access_brig, access_armory, access_court,
+			            access_heads, access_hos, access_RC_announce, access_keycard_auth, access_gateway)
+	minimal_access = list(access_eva, access_security, access_sec_doors, access_brig, access_armory, access_court,
 			            access_forensics_lockers, access_morgue, access_maint_tunnels, access_all_personal_lockers,
 			            access_research, access_engine, access_mining, access_medical, access_construction, access_mailsorting,
 			            access_heads, access_hos, access_RC_announce, access_keycard_auth, access_gateway, access_customs)
@@ -184,8 +184,13 @@
 	spawn_positions = 1
 	supervisors = "the head of security"
 	selection_color = "#ffeeee"
+<<<<<<< HEAD
 	access = list(access_security, access_sec_doors, access_brig, access_court, access_maint_tunnels, access_morgue, access_customs)
 	minimal_access = list(access_security, access_customs, access_maint_tunnels)
+=======
+	access = list(access_security, access_sec_doors, access_brig, access_court, access_maint_tunnels, access_morgue)
+	minimal_access = list(access_brig, access_sec_doors, access_security, access_customs, access_maint_tunnels)
+>>>>>>> 71151c0c57536421297fd962431cabf349eb4a93
 	minimal_player_age = 7
 	equip(var/mob/living/carbon/human/H)
 		if(!H)	return 0
