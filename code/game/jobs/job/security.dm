@@ -184,13 +184,8 @@
 	spawn_positions = 1
 	supervisors = "the head of security"
 	selection_color = "#ffeeee"
-<<<<<<< HEAD
 	access = list(access_security, access_sec_doors, access_brig, access_court, access_maint_tunnels, access_morgue, access_customs)
 	minimal_access = list(access_security, access_customs, access_maint_tunnels)
-=======
-	access = list(access_security, access_sec_doors, access_brig, access_court, access_maint_tunnels, access_morgue)
-	minimal_access = list(access_brig, access_sec_doors, access_security, access_customs, access_maint_tunnels)
->>>>>>> 71151c0c57536421297fd962431cabf349eb4a93
 	minimal_player_age = 7
 	equip(var/mob/living/carbon/human/H)
 		if(!H)	return 0
