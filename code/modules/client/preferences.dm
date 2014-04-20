@@ -1147,7 +1147,7 @@ datum/preferences
 						var/msg = input(usr,"Set the flavor text in your 'examine' verb. This can also be used for OOC notes and preferences!","Flavor Text",html_decode(flavor_text)) as message
 
 						if(msg != null)
-							msg = copytext(msg, 1, MAX_MESSAGE_LEN)
+							msg = copytext(msg, 1, MAX_PAPER_MESSAGE_LEN)
 							msg = html_encode(msg)
 
 							flavor_text = msg
