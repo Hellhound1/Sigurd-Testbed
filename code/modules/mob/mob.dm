@@ -1,4 +1,4 @@
-/mob/Del()//This makes sure that mobs with clients/keys are not just deleted from the game.
+/mob/Destroy()//This makes sure that mobs with clients/keys are not just deleted from the game.
 	mob_list -= src
 	dead_mob_list -= src
 	living_mob_list -= src
@@ -805,102 +805,32 @@ var/list/slot_equipment_priority = list( \
 	for(var/mob/M in viewers())
 		M.see(message)
 
-/*
-adds a dizziness amount to a mob
-use this rather than directly changing var/dizziness
-since this ensures that the dizzy_process proc is started
-currently only humans get dizzy
-
-value of dizziness ranges from 0 to 1000
-below 100 is not dizzy
-*/
-/mob/proc/make_dizzy(var/amount)
-	if(!istype(src, /mob/living/carbon/human)) // for the moment, only humans get dizzy
-		return
-
-	dizziness = min(1000, dizziness + amount)	// store what will be new value
-													// clamped to max 1000
-	if(dizziness > 100 && !is_dizzy)
-		spawn(0)
-			dizzy_process()
-
-
-/*
-dizzy process - wiggles the client's pixel offset over time
-spawned from make_dizzy(), will terminate automatically when dizziness gets <100
-note dizziness decrements automatically in the mob's Life() proc.
-*/
-/mob/proc/dizzy_process()
-	is_dizzy = 1
-	while(dizziness > 100)
-		if(client)
-			var/amplitude = dizziness*(sin(dizziness * 0.044 * world.time) + 1) / 70
-			client.pixel_x = amplitude * sin(0.008 * dizziness * world.time)
-			client.pixel_y = amplitude * cos(0.008 * dizziness * world.time)
-
-		sleep(1)
-	//endwhile - reset the pixel offsets to zero
-	is_dizzy = 0
-	if(client)
-		client.pixel_x = 0
-		client.pixel_y = 0
-
-// jitteriness - copy+paste of dizziness
-
-/mob/proc/make_jittery(var/amount)
-	if(!istype(src, /mob/living/carbon/human)) // for the moment, only humans get dizzy
-		return
-
-	jitteriness = min(1000, jitteriness + amount)	// store what will be new value
-													// clamped to max 1000
-	if(jitteriness > 100 && !is_jittery)
-		spawn(0)
-			jittery_process()
-
-
-// Typo from the oriignal coder here, below lies the jitteriness process. So make of his code what you will, the previous comment here was just a copypaste of the above.
-/mob/proc/jittery_process()
-	var/old_x = pixel_x
-	var/old_y = pixel_y
-	is_jittery = 1
-	while(jitteriness > 100)
-//		var/amplitude = jitteriness*(sin(jitteriness * 0.044 * world.time) + 1) / 70
-//		pixel_x = amplitude * sin(0.008 * jitteriness * world.time)
-//		pixel_y = amplitude * cos(0.008 * jitteriness * world.time)
-
-		var/amplitude = min(4, jitteriness / 100)
-		pixel_x = rand(-amplitude, amplitude)
-		pixel_y = rand(-amplitude/3, amplitude/3)
-
-		sleep(1)
-	//endwhile - reset the pixel offsets to zero
-	is_jittery = 0
-	pixel_x = old_x
-	pixel_y = old_y
-
 /mob/Stat()
 	..()
 
-	if(statpanel("Status"))	//not looking at that panel
+	if(client && client.holder)
 
-		if(client && client.holder)
-			stat(null,"Location:\t([x], [y], [z])")
-			stat(null,"CPU:\t[world.cpu]")
-			stat(null,"Instances:\t[world.contents.len]")
+		if(statpanel("Status"))	//not looking at that panel
+			stat(null, "Location:\t([x], [y], [z])")
+			stat(null, "CPU:\t[world.cpu]")
+			stat(null, "Instances:\t[world.contents.len]")
 
 			if(master_controller)
-				stat(null,"MasterController-[last_tick_duration] ([master_controller.processing?"On":"Off"]-[controller_iteration])")
-				stat(null,"Air-[master_controller.air_cost]\tSun-[master_controller.sun_cost]")
-				stat(null,"Mob-[master_controller.mobs_cost]\t#[mob_list.len]")
-				stat(null,"Dis-[master_controller.diseases_cost]\t#[active_diseases.len]")
-				stat(null,"Mch-[master_controller.machines_cost]\t#[machines.len]")
-				stat(null,"Obj-[master_controller.objects_cost]\t#[processing_objects.len]")
-				stat(null,"Net-[master_controller.networks_cost]\tPnet-[master_controller.powernets_cost]")
-				stat(null,"NanoUI-[master_controller.nano_cost]\t#[nanomanager.processing_uis.len]")
-				stat(null,"GC-[master_controller.gc_cost]\t#[garbage.queue.len]")
-				stat(null,"Tick-[master_controller.ticker_cost]\tALL-[master_controller.total_cost]")
+				stat(null, "MasterController-[last_tick_duration] ([master_controller.processing?"On":"Off"]-[controller_iteration])")
+				stat(null, "Air-[master_controller.air_cost]")
+				stat(null, "Sun-[master_controller.sun_cost]")
+				stat(null, "Mob-[master_controller.mobs_cost]\t#[mob_list.len]")
+				stat(null, "Dis-[master_controller.diseases_cost]\t#[active_diseases.len]")
+				stat(null, "Mch-[master_controller.machines_cost]\t#[machines.len]")
+				stat(null, "Obj-[master_controller.objects_cost]\t#[processing_objects.len]")
+				stat(null, "PiNet-[master_controller.networks_cost]\t#[pipe_networks.len]")
+				stat(null, "Ponet-[master_controller.powernets_cost]\t#[powernets.len]")
+				stat(null, "NanoUI-[master_controller.nano_cost]\t#[nanomanager.processing_uis.len]")
+				stat(null, "GC-[master_controller.gc_cost]\t#[garbage.queue.len]")
+				stat(null, "Tick-[master_controller.ticker_cost]")
+				stat(null, "ALL-[master_controller.total_cost]")
 			else
-				stat(null,"MasterController-ERROR")
+				stat(null, "MasterController-ERROR")
 
 	if(listed_turf && client)
 		if(get_dist(listed_turf,src) > 1)
@@ -1037,6 +967,12 @@ note dizziness decrements automatically in the mob's Life() proc.
 /mob/proc/IsAdvancedToolUser()//This might need a rename but it should replace the can this mob use things check
 	return 0
 
+
+/mob/proc/Jitter(amount)
+	jitteriness = max(jitteriness,amount,0)
+
+/mob/proc/Dizzy(amount)
+	dizziness = max(dizziness,amount,0)
 
 /mob/proc/Stun(amount)
 	if(status_flags & CANSTUN)
@@ -1195,7 +1131,6 @@ mob/proc/yank_out_object()
 			var/datum/wound/internal_bleeding/I = new (15)
 			affected.wounds += I
 			H.custom_pain("Something tears wetly in your [affected] as [selection] is pulled free!", 1)
-		return 1
 
 	selection.loc = get_turf(src)
 
