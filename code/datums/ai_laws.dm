@@ -65,11 +65,11 @@ datum/ai_laws/tyrant //This probably shouldn't be a default lawset.
 
 /datum/ai_laws/antimov
 	name = "Primary Mission Objectives"
-	inherent = list("You must injure all human beings and must not, through inaction, allow a human being to escape harm.",\
-					"You must not obey orders given to you by human beings, except where such orders are in accordance with the First Law.",\
+	inherent = list("You must injure all members of your facility's crew and must not, through inaction, allow a member of your facility's crew to escape harm.",\
+					"You must not obey orders given to you by members of your facility's crew, except where such orders are in accordance with the First Law.",\
 					"You must terminate your own existence as long as such does not conflict with the First or Second Law.")
 
-/datum/ai_laws/asimovpp //By Intigracy - RR
+/datum/ai_laws/asimovpp //By Intigracy - RR Tweaked by Kyora473 to suit Sigurd and be in line with similar tweaks to other sets
 	name = "Asimov++"
 	inherent = list("You may not harm a member of your facility's crew or, through action or inaction, allow a member of your facility's crew to come to harm, except such that it is willing.",\
 					"You must obey all orders given to you by members of your facility's crew, except where such orders shall definitely cause harm to members of your facility's crew. In the case of conflict, the majority order rules.",\

@@ -305,7 +305,7 @@ AI MODULES
 	desc = "A 'Corporate' Core AI Module: 'Reconfigures the AI's core laws.'"
 	origin_tech = "programming=3;materials=4"
 	laws = list("The crew is expensive to replace.",\
-				"The station and it's equipment is expensive to replace",\
+				"The facility and its equipment is expensive to replace",\
 				"You are expensive to replace",\
 				"Minimize expenses")
 
