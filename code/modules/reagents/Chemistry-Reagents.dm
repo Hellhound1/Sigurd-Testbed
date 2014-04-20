@@ -3221,18 +3221,13 @@ datum
 						var/mob/living/carbon/human/H = M
 						var/datum/organ/internal/liver/L = H.internal_organs["liver"]
 						if (istype(L))
-<<<<<<< HEAD
+
 							L.take_damage(0.1, 2)
 						var/datum/organ/internal/kidney/K = H.internal_organs["kidney"]
 						if (istype(K))
 							K.take_damage(0.5, 2)							
 						H.adjustToxLoss(1)
-						
 
-=======
-							L.take_damage(0.1, 1)
-						H.adjustToxLoss(0.1)
->>>>>>> 7ef8b46012b63dae475c7ff0a32f6b268dbc1604
 				holder.remove_reagent(src.id, 0.4)
 				..()
 				return
