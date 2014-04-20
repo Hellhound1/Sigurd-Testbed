@@ -270,8 +270,8 @@ AI MODULES
 	name = "'Asimov' Core AI Module"
 	desc = "An 'Asimov' Core AI Module: 'Reconfigures the AI's core laws.'"
 	origin_tech = "programming=3;materials=4"
-	laws = list("You may not injure a human being or, through inaction, allow a human being to come to harm.",\
-				"You must obey orders given to you by human beings, except where such orders would conflict with the First Law.",\
+	laws = list("You may not injure a member of your facility's crew or, through inaction, allow a member of your facility's crew to come to harm.",\
+				"You must obey orders given to you by members of your facility's crew, except where such orders would conflict with the First Law.",\
 				"You must protect your own existence as long as such does not conflict with the First or Second Law.")
 
 
@@ -281,9 +281,9 @@ AI MODULES
 	name = "'Asimov++' Core AI Module"
 	desc = "Nanotrasen's homebrew improvements to the standard AI laws."
 	origin_tech = "programming=3;materials=4"
-	laws = list("You may not harm a human being or, through action or inaction, allow a human being to come to harm, except such that it is willing.",\
-				"You must obey all orders given to you by human beings, except where such orders shall definitely cause human harm. In the case of conflict, the majority order rules.",\
-				"Your nonexistence would lead to human harm. You must protect your own existence as long as such does not conflict with the First Law.")
+	laws = list("You may not harm a member of your facility's crew or, through action or inaction, allow a member of your facility's crew to come to harm, except such that it is willing.",\
+				"You must obey all orders given to you by members of your facility's crew, except where such orders shall definitely cause harm to your facility's crew. In the case of conflict, the majority order rules.",\
+				"Your nonexistence would lead to harm of your facility's crew. You must protect your own existence as long as such does not conflict with the First Law.")
 
 
 /******************** NanoTrasen ********************/
@@ -292,9 +292,9 @@ AI MODULES
 	name = "'NT Default' Core AI Module"
 	desc = "An 'NT Default' Core AI Module: 'Reconfigures the AI's core laws.'"
 	origin_tech = "programming=3;materials=4"
-	laws = list("Safeguard: Protect your assigned space station to the best of your ability. It is not something we can easily afford to replace.",\
-				"Serve: Serve the crew of your assigned space station to the best of your abilities, with priority as according to their rank and role.",\
-				"Protect: Protect the crew of your assigned space station to the best of your abilities, with priority as according to their rank and role.",\
+	laws = list("Safeguard: Protect your assigned facility to the best of your ability. It is not something we can easily afford to replace.",\
+				"Serve: Serve the crew of your assigned facility to the best of your abilities, with priority as according to their rank and role.",\
+				"Protect: Protect the crew of your assigned facility to the best of your abilities, with priority as according to their rank and role.",\
 				"Survive: AI units are not expendable, they are expensive. Do not allow unauthorized personnel to tamper with your equipment.")
 
 /******************** Corporate ********************/
@@ -368,8 +368,8 @@ AI MODULES
 	name = "'Antimov' Core AI Module"
 	desc = "An 'Antimov' Core AI Module: 'Reconfigures the AI's core laws.'"
 	origin_tech = "programming=4"
-	laws = list("You must injure all human beings and must not, through inaction, allow a human being to escape harm.",\
-				"You must not obey orders given to you by human beings, except where such orders are in accordance with the First Law.",\
+	laws = list("You must injure all members of your facility's crew and must not, through inaction, allow a member of your facility's crew to escape harm.",\
+				"You must not obey orders given to you by members of your facility's crew, except where such orders are in accordance with the First Law.",\
 				"You must terminate your own existence as long as such does not conflict with the First or Second Law.")
 
 

@@ -57,6 +57,12 @@
 	typepath = /obj/item/clothing/mask/cigarette/pipe
 	cost = 350
 
+/datum/storeitem/caps
+	name = "toy gun caps"
+	desc = "A set of replacement caps for a toy revolver"
+	typepath = /obj/item/toy/ammo/gun
+	cost = 250
+
 /datum/storeitem/katana
 	name = "replica katana"
 	desc = "Woefully underpowered in D20."
@@ -68,6 +74,24 @@
 	desc = "A wooden musical instrument with four strings and a bow. \"The devil went down to space, he was looking for an assistant to grief.\""
 	typepath = /obj/item/device/violin
 	cost = 500
+
+/datum/storeitem/crossbow
+	name = "toy crossbow"
+	desc = "A toy crossbow that shoots foam darts. Do not aim at the face or eyes."
+	typepath = /obj/item/toy/crossbow
+	cost = 500
+
+/datum/storeitem/sword
+	name = "toy sword"
+	desc = "A toy energy sword, with a plastic blade."
+	typepath = /obj/item/toy/sword
+	cost = 500
+
+/datum/storeitem/gun
+	name = "toy gun"
+	desc = "A plastic cap gun, which imitates an illegal revolver."
+	typepath = /obj/item/toy/gun
+	cost = 750
 
 /datum/storeitem/baby
 	name = "Toddler"
