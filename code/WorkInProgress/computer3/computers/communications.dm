@@ -131,12 +131,6 @@
 			state = STATE_DEFAULT
 			if(authenticated)
 				state = STATE_CANCELSHUTTLE
-		if("cancelshuttle2" in href_list)
-			if(!computer.radio.subspace)
-				return
-			if(authenticated)
-				cancel_call_proc(usr)
-			state = STATE_DEFAULT
 		if("messagelist" in href_list)
 			currmsg = 0
 			state = STATE_MESSAGELIST
@@ -197,7 +191,7 @@
 				usr << "Message transmitted."
 				log_say("[key_name(usr)] has made a Centcomm announcement: [input]")
 				centcomm_message_cooldown = 1
-				spawn(6000)//10 minute cooldown
+				spawn(600)//10 minute cooldown
 					centcomm_message_cooldown = 0
 
 
@@ -214,7 +208,7 @@
 				usr << "Message transmitted."
 				log_say("[key_name(usr)] has made a Syndicate announcement: [input]")
 				centcomm_message_cooldown = 1
-				spawn(6000)//10 minute cooldown
+				spawn(600)//10 minute cooldown
 					centcomm_message_cooldown = 0
 
 		if("RestoreBackup" in href_list)

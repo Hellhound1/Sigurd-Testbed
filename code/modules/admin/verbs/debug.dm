@@ -19,7 +19,7 @@
 /* 21st Sept 2010
 Updated by Skie -- Still not perfect but better!
 Stuff you can't do:
-Call proc /mob/proc/make_dizzy() for some player
+Call proc /mob/proc/Dizzy() for some player
 Because if you select a player mob as owner it tries to do the proc for
 /mob/living/carbon/human/ instead. And that gives a run-time error.
 But you can call procs that are of type /mob/living/carbon/human/proc/ for that player.
@@ -1087,3 +1087,12 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 		log_admin("[key_name(src)] has toggled [M.key]'s [blockname] block [state]!")
 	else
 		alert("Invalid mob")
+
+/client/proc/gib_money()
+	set category = "Fun"
+	set name = "Dispense Money"
+	set desc = "Honk"
+
+	var/response = input(src,"How much moneys?") as num
+	if( response < 1) return
+	dispense_cash(response, mob.loc)

@@ -40,6 +40,7 @@
 	appearance_loadbanfile()
 	jobban_updatelegacybans()
 	LoadBans()
+	SetupHooks() // /vg/
 
 	if(config && config.server_name != null && config.server_suffix && world.port > 0)
 		// dumb and hardcoded but I don't care~
@@ -95,6 +96,8 @@
 
 	process_teleport_locs()			//Sets up the wizard teleport locations
 	process_ghost_teleport_locs()	//Sets up ghost teleport locations.
+
+	setupPool()
 
 	spawn(3000)		//so we aren't adding to the round-start lag
 		if(config.ToRban)
@@ -279,7 +282,6 @@
 	s += "</a>"
 	s += ")"
 	s += "<br>The Perfect Mix of RP & Action<br>"
-	s += "<b>NEW HOST. NO LAG. NO CRASH.</b><br>"
 
 
 

@@ -21,14 +21,25 @@
 			return 0
 
 		if(M == user)
-			M << "\blue You swallow a gulp of [src]."
-			if(reagents.total_volume)
-				reagents.reaction(M, INGEST)
-				spawn(5)
-					reagents.trans_to(M, gulp_size)
+			if(!src.reagents.total_volume && user.a_intent == "harm" && user.zone_sel.selecting == "head")
+				user.visible_message("<span class='notice'>[user] crushes the can of [src] on \his forehead!</span>", "<span class='notice'>You crush the can of [src] on your forehead!</span>")
+				playsound(user.loc,'sound/weapons/pierce.ogg', rand(10,50), 1)
+				var/obj/item/trash/can/crushed_can = new /obj/item/trash/can(user.loc)
+				crushed_can.icon_state = icon_state
+				del(src)
 
-			playsound(M.loc,'sound/items/drink.ogg', rand(10,50), 1)
-			return 1
+			else
+				M << "\blue You swallow a gulp of [src]."
+				if(reagents.total_volume)
+					reagents.reaction(M, INGEST)
+					spawn(5)
+						reagents.trans_to_ingest(M, gulp_size)
+
+				playsound(M.loc,'sound/items/drink.ogg', rand(10,50), 1)
+				return 1
+
+
+
 		else if( istype(M, /mob/living/carbon/human) )
 
 			for(var/mob/O in viewers(world.view, user))
@@ -44,7 +55,7 @@
 			if(reagents.total_volume)
 				reagents.reaction(M, INGEST)
 				spawn(5)
-					reagents.trans_to(M, gulp_size)
+					reagents.trans_to_ingest(M, gulp_size)
 
 			if(isrobot(user)) //Cyborg modules that include drinks automatically refill themselves, but drain the borg's cell
 				var/mob/living/silicon/robot/bro = user
@@ -180,7 +191,7 @@
 
 /obj/item/weapon/reagent_containers/food/drinks/cans/thirteenloko
 	name = "Thirteen Loko"
-	desc = "The CMO has advised crew members that consumption of Thirteen Loko may result in seizures, blindness, drunkeness, or even death. Please Drink Responsably."
+	desc = "The CMO has advised crew members that consumption of Thirteen Loko may result in seizures, blindness, drunkeness, or even death. Please Drink Responsibly."
 	icon_state = "thirteen_loko"
 	New()
 		..()

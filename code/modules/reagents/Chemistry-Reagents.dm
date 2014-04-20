@@ -184,7 +184,7 @@ datum
 
 /* Must check the transfering of reagents and their data first. They all can point to one disease datum.
 
-			Del()
+			Destroy()
 				if(src.data["virus"])
 					var/datum/disease/D = src.data["virus"]
 					D.cure(0)
@@ -1135,6 +1135,22 @@ datum
 				..()
 				return
 
+
+		paracetamol
+			name = "Paracetamol"
+			id = "paracetamol"
+			description = "Most probably know this as Tylenol, but this chemical is a mild, simple painkiller."
+			reagent_state = LIQUID
+			color = "#C855DC"
+			overdose_dam = 0
+			overdose = 60
+
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom
+				..()
+				if (volume > overdose)
+					M.hallucination = max(M.hallucination, 2)
+
 		mutagen
 			name = "Unstable mutagen"
 			id = "mutagen"
@@ -1475,7 +1491,7 @@ datum
 
 			on_mob_life(var/mob/living/M as mob)
 				if(!M) M = holder.my_atom
-				M.make_dizzy(1)
+				M.Dizzy(1)
 				if(!M.confused) M.confused = 1
 				M.confused = max(M.confused, 20)
 				holder.remove_reagent(src.id, 0.5 * REAGENTS_METABOLISM)
@@ -1906,8 +1922,8 @@ datum
 						M.status_flags &= ~DISFIGURED
 					if(35 to INFINITY)
 						M.adjustToxLoss(1)
-						M.make_dizzy(5)
-						M.make_jittery(5)
+						M.Dizzy(5)
+						M.Jitter(5)
 
 				..()
 				return
@@ -2000,6 +2016,34 @@ datum
 				if( (prob(10) && method==TOUCH) || method==INGEST)
 					M.contract_disease(new /datum/disease/xeno_transformation(0),1)
 
+		spore
+			name = "Blob Spores"
+			id = "spore"
+			description = "Spores of some blob creature thingy."
+			reagent_state = LIQUID
+			color = "#CE760A" // rgb: 206, 118, 10
+			var/client/blob_client = null
+			var/blob_point_rate = 3
+
+			on_mob_life(var/mob/living/M)
+				if(!M) M = holder.my_atom
+				if (holder.has_reagent("plantbgone",45))
+					holder.del_reagent("spore")
+				if (prob(1))
+					M << "\red Your mouth tastes funny."
+				if (prob(1) && prob(25))
+					if(iscarbon(M))
+						var/mob/living/carbon/C = M
+						if(directory[ckey(C.key)])
+							blob_client = directory[ckey(C.key)]
+							C.gib()
+							if(blob_client)
+								var/obj/effect/blob/core/core = new(get_turf(C), 200, blob_client, blob_point_rate)
+								if(core.overmind && core.overmind.mind)
+									core.overmind.mind.name = C.name
+
+				return
+
 //foam precursor
 
 		fluorosurfactant
@@ -2036,7 +2080,7 @@ datum
 			on_mob_life(var/mob/living/M as mob)
 				if(!data) data = 1
 				data++
-				M.make_dizzy(5)
+				M.Dizzy(5)
 				M.jitteriness = max(M.jitteriness-5,0)
 				if(data >= 25)
 					if (!M.stuttering) M.stuttering = 1
@@ -2198,7 +2242,6 @@ datum
 			reagent_state = SOLID
 			color = "#FFFFFF" // rgb: 255,255,255
 			overdose = 20
-
 
 
 /////////////////////////Food Reagents////////////////////////////
@@ -2472,18 +2515,18 @@ datum
 				switch(data)
 					if(1 to 5)
 						if (!M.stuttering) M.stuttering = 1
-						M.make_dizzy(5)
+						M.Dizzy(5)
 						if(prob(10)) M.emote(pick("twitch","giggle"))
 					if(5 to 10)
 						if (!M.stuttering) M.stuttering = 1
-						M.make_jittery(10)
-						M.make_dizzy(10)
+						M.Jitter(10)
+						M.Dizzy(10)
 						M.druggy = max(M.druggy, 35)
 						if(prob(20)) M.emote(pick("twitch","giggle"))
 					if (10 to INFINITY)
 						if (!M.stuttering) M.stuttering = 1
-						M.make_jittery(20)
-						M.make_dizzy(20)
+						M.Jitter(20)
+						M.Dizzy(20)
 						M.druggy = max(M.druggy, 40)
 						if(prob(30)) M.emote(pick("twitch","giggle"))
 				holder.remove_reagent(src.id, 0.2)
@@ -2739,6 +2782,7 @@ datum
 					if(M.getToxLoss() && prob(20)) M.adjustToxLoss(-1)
 					return
 
+
 			carrotjuice
 				name = "Carrot juice"
 				id = "carrotjuice"
@@ -2868,7 +2912,7 @@ datum
 
 				on_mob_life(var/mob/living/M as mob)
 					..()
-					M.make_jittery(5)
+					M.Jitter(5)
 					if(adj_temp > 0 && holder.has_reagent("frostoil"))
 						holder.remove_reagent("frostoil", 10*REAGENTS_METABOLISM)
 
@@ -2924,12 +2968,13 @@ datum
 						M.adjustToxLoss(-1)
 					return
 
-				icetea
-					name = "Iced Tea"
-					id = "icetea"
-					description = "No relation to a certain rap artist/ actor."
-					color = "#104038" // rgb: 16, 64, 56
-					adj_temp = -5
+
+			icetea
+				name = "Iced Tea"
+				id = "icetea"
+				description = "No relation to a certain rap artist/ actor."
+				color = "#104038" // rgb: 16, 64, 56
+				adj_temp = -5
 
 			kahlua
 				name = "Kahlua"
@@ -2942,7 +2987,7 @@ datum
 
 				on_mob_life(var/mob/living/M as mob)
 					..()
-					M.make_jittery(5)
+					M.Jitter(5)
 					return
 
 			cold
@@ -2989,7 +3034,7 @@ datum
 					adj_sleepy = -2
 
 					on_mob_life(var/mob/living/M as mob)
-						M.make_jittery(20)
+						M.Jitter(20)
 						M.druggy = max(M.druggy, 30)
 						M.dizziness +=5
 						M.drowsyness = 0
@@ -3083,7 +3128,7 @@ datum
 
 					on_mob_life(var/mob/living/M as mob)
 						..()
-						M.make_jittery(5)
+						M.Jitter(5)
 						return
 
 		hippies_delight
@@ -3100,18 +3145,18 @@ datum
 				switch(data)
 					if(1 to 5)
 						if (!M.stuttering) M.stuttering = 1
-						M.make_dizzy(10)
+						M.Dizzy(10)
 						if(prob(10)) M.emote(pick("twitch","giggle"))
 					if(5 to 10)
 						if (!M.stuttering) M.stuttering = 1
-						M.make_jittery(20)
-						M.make_dizzy(20)
+						M.Jitter(20)
+						M.Dizzy(20)
 						M.druggy = max(M.druggy, 45)
 						if(prob(20)) M.emote(pick("twitch","giggle"))
 					if (10 to INFINITY)
 						if (!M.stuttering) M.stuttering = 1
-						M.make_jittery(40)
-						M.make_dizzy(40)
+						M.Jitter(40)
+						M.Dizzy(40)
 						M.druggy = max(M.druggy, 60)
 						if(prob(30)) M.emote(pick("twitch","giggle"))
 				holder.remove_reagent(src.id, 0.2)
@@ -3138,7 +3183,7 @@ datum
 			on_mob_life(var/mob/living/M as mob)
 				// Sobering multiplier.
 				// Sober block makes it more difficult to get drunk
-				var/sober_str=(M_SOBER in M.mutations)?1:2
+				var/sober_str=!(M_SOBER in M.mutations)?1:2
 
 				M:nutrition += nutriment_factor
 				holder.remove_reagent(src.id, FOOD_METABOLISM)
@@ -3176,6 +3221,7 @@ datum
 						var/mob/living/carbon/human/H = M
 						var/datum/organ/internal/liver/L = H.internal_organs["liver"]
 						if (istype(L))
+<<<<<<< HEAD
 							L.take_damage(0.1, 2)
 						var/datum/organ/internal/kidney/K = H.internal_organs["kidney"]
 						if (istype(K))
@@ -3183,6 +3229,10 @@ datum
 						H.adjustToxLoss(1)
 						
 
+=======
+							L.take_damage(0.1, 1)
+						H.adjustToxLoss(0.1)
+>>>>>>> 7ef8b46012b63dae475c7ff0a32f6b268dbc1604
 				holder.remove_reagent(src.id, 0.4)
 				..()
 				return
@@ -3345,7 +3395,7 @@ datum
 					//	M:sleeping = max(0,M.sleeping-2)
 					if (M.bodytemperature > 310)
 						M.bodytemperature = max(310, M.bodytemperature-5)
-					M.make_jittery(1)
+					M.Jitter(1)
 					return
 
 
@@ -3842,4 +3892,7 @@ datum
 				M.adjustBrainLoss(10*REM)
 				return
 
+
 */
+// Undefine the alias for REAGENTS_EFFECT_MULTIPLER
+#undef REM

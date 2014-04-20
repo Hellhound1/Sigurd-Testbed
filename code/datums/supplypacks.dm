@@ -174,6 +174,16 @@ var/list/all_supply_groups = list("Operations","Security","Hospitality","Enginee
 	containername = "Emergency Crate"
 	group = "Engineering"
 
+/datum/supply_packs/evacuation
+	name = "Inflatable barriers"
+	contains = list(/obj/item/weapon/storage/briefcase/inflatable,
+					/obj/item/weapon/storage/briefcase/inflatable,
+					/obj/item/weapon/storage/briefcase/inflatable)
+	cost = 20
+	containertype = /obj/structure/closet/crate
+	containername = "Inflatable Barrier Crate"
+	group = "Engineering"
+
 /datum/supply_packs/janitor
 	name = "Janitorial supplies"
 	contains = list(/obj/item/weapon/reagent_containers/glass/bucket,
@@ -899,8 +909,7 @@ var/list/all_supply_groups = list("Operations","Security","Hospitality","Enginee
 	group = "Hospitality"
 
 /datum/supply_packs/formal_wear
-	contains = list(/obj/item/clothing/head/bowler,
-					/obj/item/clothing/head/that,
+	contains = list(/obj/item/clothing/head/that,
 					/obj/item/clothing/suit/storage/lawyer/bluejacket,
 					/obj/item/clothing/suit/storage/lawyer/purpjacket,
 					/obj/item/clothing/under/suit_jacket,
