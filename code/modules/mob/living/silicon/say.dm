@@ -118,7 +118,7 @@
 				return
 
 
-	return ..(message,null,verb)
+	return ..(message)
 
 //For holopads only. Usable by AI.
 /mob/living/silicon/ai/proc/holopad_talk(var/message)
