@@ -664,6 +664,7 @@
 
 		jobs += "</tr></table>"
 
+
 		//Other races  (BLUE, because I have no idea what other color to make this)
 		jobs += "<table cellpadding='1' cellspacing='0' width='100%'>"
 		jobs += "<tr bgcolor='ccccff'><th colspan='1'>Other</th></tr><tr align='center'>"
@@ -680,6 +681,27 @@
 		else
 			jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=Emergency Response Team;jobban4=\ref[M]'>Emergency Response Team</a></td>"
 
+		jobs += "</tr></table>"
+
+	//Civilian (Grey)
+		counter = 0
+		jobs += "<table cellpadding='1' cellspacing='0' width='100%'>"
+		jobs += "<tr bgcolor='dddddd'><th colspan='[length(whitelisted_positions)]'><a href='?src=\ref[src];jobban3=whitelistdept;jobban4=\ref[M]'>Whitelisted Positions</a></th></tr><tr align='center'>"
+		for(var/jobPos in whitelisted_positions)
+			if(!jobPos)	continue
+			var/datum/job/job = job_master.GetJob(jobPos)
+			if(!job) continue
+
+			if(jobban_isbanned(M, job.title))
+				jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=[job.title];jobban4=\ref[M]'><font color=red>[replacetext(job.title, " ", "&nbsp")]</font></a></td>"
+				counter++
+			else
+				jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=[job.title];jobban4=\ref[M]'>[replacetext(job.title, " ", "&nbsp")]</a></td>"
+				counter++
+
+			if(counter >= 5) //So things dont get squiiiiished!
+				jobs += "</tr><tr align='center'>"
+				counter = 0
 		jobs += "</tr></table>"
 
 		body = "<body>[jobs]</body>"
@@ -747,6 +769,12 @@
 			if("nonhumandept")
 				joblist += "pAI"
 				for(var/jobPos in nonhuman_positions)
+					if(!jobPos)	continue
+					var/datum/job/temp = job_master.GetJob(jobPos)
+					if(!temp) continue
+					joblist += temp.title
+			if("whitelistdept")
+				for(var/jobPos in whitelisted_positions)
 					if(!jobPos)	continue
 					var/datum/job/temp = job_master.GetJob(jobPos)
 					if(!temp) continue
@@ -1224,6 +1252,29 @@
 			M << "\blue You have been sent to the Thunderdome."
 		log_admin("[key_name(usr)] has sent [key_name(M)] to the thunderdome. (Observer.)")
 		message_admins("[key_name_admin(usr)] has sent [key_name_admin(M)] to the thunderdome. (Observer.)", 1)
+
+	else if(href_list["aroomwarp"])
+		if(!check_rights(R_FUN))	return
+
+		if(alert(usr, "Confirm?", "Message", "Yes", "No") != "Yes")
+			return
+
+		var/mob/M = locate(href_list["aroomwarp"])
+		if(!ismob(M))
+			usr << "This can only be used on instances of type /mob"
+			return
+		if(istype(M, /mob/living/silicon/ai))
+			usr << "This cannot be used on instances of type /mob/living/silicon/ai"
+			return
+
+		M.Paralyse(5)
+		sleep(5)
+		M.loc = pick(aroomwarp)
+		spawn(50)
+			M << "\blue You have been sent to the <b>Admin Room!</b>."
+		log_admin("[key_name(usr)] has sent [key_name(M)] to the Admin Room")
+		message_admins("[key_name_admin(usr)] has sent [key_name_admin(M)] to the Admin Room", 1)
+
 
 	else if(href_list["revive"])
 		if(!check_rights(R_REJUVINATE))	return

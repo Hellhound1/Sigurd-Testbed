@@ -13,62 +13,54 @@
 	real_name = "Test Dummy"
 	status_flags = GODMODE|CANPUSH
 
-/mob/living/carbon/human/skrell/New()
+/mob/living/carbon/human/skrell/New(var/new_loc)
 	h_style = "Skrell Male Tentacles"
-	set_species("Skrell")
-	..()
+	..(new_loc, "Skrell")
 
-/mob/living/carbon/human/tajaran/New()
+/mob/living/carbon/human/tajaran/New(var/new_loc)
 	h_style = "Tajaran Ears"
-	set_species("Tajaran")
-	..()
+	..(new_loc, "Tajaran")
 
-/mob/living/carbon/human/unathi/New()
+/mob/living/carbon/human/unathi/New(var/new_loc)
 	h_style = "Unathi Horns"
-	set_species("Unathi")
-	..()
+	..(new_loc, "Unathi")
 
-/mob/living/carbon/human/vox/New()
+/mob/living/carbon/human/vox/New(var/new_loc)
 	h_style = "Short Vox Quills"
-	set_species("Vox")
-	..()
+	..(new_loc, "Vox")
 
-/mob/living/carbon/human/skellington/New()
+/mob/living/carbon/human/skellington/New(var/new_loc)
 	h_style = "Bald"
-	set_species("Skellington")
-	..()
+	..(new_loc, "Skellington")
 
-/mob/living/carbon/human/diona/New()
-	species = new /datum/species/diona(src)
-	..()
+/mob/living/carbon/human/kidan/New(var/new_loc)
+	..(new_loc, "Kidan")
 
-/mob/living/carbon/human/kidan/New()
-	species = new /datum/species/kidan(src)
-	..()
+/mob/living/carbon/human/slime/New(var/new_loc)
+	..(new_loc, "Slime People")
+	verbs += /mob/living/carbon/human/slime/proc/slimepeople_ventcrawl
 
-/mob/living/carbon/human/slime/New()
-	species = new /datum/species/slime(src)
-	dna = new /datum/dna(null)
-	dna.mutantrace = "slime"
-	..()
-
-/mob/living/carbon/human/machine/New()
-	species = new /datum/species/machine(src)
-	..()
-
-/mob/living/carbon/human/grey/New()
-	set_species("Grey")
+/mob/living/carbon/human/grey/New(var/new_loc)
+	..(new_loc, "Grey")
 	mutations.Add(M_REMOTE_TALK)
 	verbs += /mob/living/carbon/human/proc/remotesay
-	..()
 
-/mob/living/carbon/human/human/New()
-	species = new /datum/species/human(src)
-	..()
+/mob/living/carbon/human/human/New(var/new_loc)
+	..(new_loc, "Human")
 
-/mob/living/carbon/human/New()
+/mob/living/carbon/human/diona/New(var/new_loc)
+	..(new_loc, "Diona")
+
+/mob/living/carbon/human/machine/New(var/new_loc)
+	h_style = "blue IPC screen"
+	..(new_loc, "Machine")
+
+/mob/living/carbon/human/New(var/new_loc, var/new_species = null)
 	if(!species)
-		set_species()
+		if(new_species)
+			set_species(new_species)
+		else
+			set_species()
 
 	if(species.language)
 		var/datum/language/L = all_languages[species.language]
@@ -92,7 +84,7 @@
 	hud_list[IMPTRACK_HUD]    = image('icons/mob/hud.dmi', src, "hudblank")
 	hud_list[SPECIALROLE_HUD] = image('icons/mob/hud.dmi', src, "hudblank")
 	hud_list[STATUS_HUD_OOC]  = image('icons/mob/hud.dmi', src, "hudhealthy")
-		
+
 
 	..()
 
@@ -100,7 +92,6 @@
 		dna.real_name = real_name
 
 	prev_gender = gender // Debug for plural genders
-	make_organs()
 	make_blood()
 
 
@@ -738,10 +729,10 @@
 									counter++
 								if(istype(usr,/mob/living/carbon/human))
 									var/mob/living/carbon/human/U = usr
-									R.fields[text("com_[counter]")] = text("Made by [U.get_authentification_name()] ([U.get_assignment()]) on [time2text(world.realtime, "DDD MMM DD hh:mm:ss")], 2557<BR>[t1]")
+									R.fields[text("com_[counter]")] = text("Made by [U.get_authentification_name()] ([U.get_assignment()]) on [time2text(world.realtime, "DDD MMM DD hh:mm:ss")], [game_year]<BR>[t1]")
 								if(istype(usr,/mob/living/silicon/robot))
 									var/mob/living/silicon/robot/U = usr
-									R.fields[text("com_[counter]")] = text("Made by [U.name] ([U.braintype]) on [time2text(world.realtime, "DDD MMM DD hh:mm:ss")], 2557<BR>[t1]")
+									R.fields[text("com_[counter]")] = text("Made by [U.name] ([U.modtype] [U.braintype]) on [time2text(world.realtime, "DDD MMM DD hh:mm:ss")], [game_year]<BR>[t1]")
 
 	if (href_list["medical"])
 		if(hasHUD(usr,"medical"))
@@ -867,10 +858,18 @@
 									counter++
 								if(istype(usr,/mob/living/carbon/human))
 									var/mob/living/carbon/human/U = usr
-									R.fields[text("com_[counter]")] = text("Made by [U.get_authentification_name()] ([U.get_assignment()]) on [time2text(world.realtime, "DDD MMM DD hh:mm:ss")], 2557<BR>[t1]")
+									R.fields[text("com_[counter]")] = text("Made by [U.get_authentification_name()] ([U.get_assignment()]) on [time2text(world.realtime, "DDD MMM DD hh:mm:ss")], [game_year]<BR>[t1]")
 								if(istype(usr,/mob/living/silicon/robot))
 									var/mob/living/silicon/robot/U = usr
-									R.fields[text("com_[counter]")] = text("Made by [U.name] ([U.braintype]) on [time2text(world.realtime, "DDD MMM DD hh:mm:ss")], 2557<BR>[t1]")
+									R.fields[text("com_[counter]")] = text("Made by [U.name] ([U.modtype] [U.braintype]) on [time2text(world.realtime, "DDD MMM DD hh:mm:ss")], [game_year]<BR>[t1]")
+
+	if (href_list["lookitem"])
+		var/obj/item/I = locate(href_list["lookitem"])
+		I.examine()
+
+	if (href_list["lookmob"])
+		var/mob/M = locate(href_list["lookmob"])
+		M.examine()
 	..()
 	return
 
@@ -933,8 +932,13 @@
 			xylophone=0
 	return
 
+
 /mob/living/carbon/human/proc/vomit(hairball=0)
 	if(stat==2)return
+
+	if(species.flags & IS_SYNTHETIC)
+		return //Machines don't throw up.
+
 	if(!lastpuke)
 		lastpuke = 1
 		src << "<spawn class='warning'>You feel nauseous..."
@@ -1059,7 +1063,7 @@
 		src.verbs -= /mob/living/carbon/human/proc/remotesay
 		return
 	var/list/creatures = list()
-	for(var/mob/living/carbon/h in world)
+	for(var/mob/living/carbon/human/h in world)
 		creatures += h
 	var/mob/target = input ("Who do you want to project your mind to ?") as null|anything in creatures
 	if (isnull(target))
@@ -1102,7 +1106,7 @@
 
 	var/list/mob/creatures = list()
 
-	for(var/mob/living/carbon/h in world)
+	for(var/mob/living/carbon/human/h in world)
 		var/turf/temp_turf = get_turf(h)
 		if((temp_turf.z != 1 && temp_turf.z != 5) || h.stat!=CONSCIOUS) //Not on mining or the station. Or dead
 			continue
@@ -1139,6 +1143,7 @@
 		O.status &= ~ORGAN_ATTACHABLE
 		if (!O.amputated)
 			O.status &= ~ORGAN_DESTROYED
+			O.destspawn = 0
 		O.wounds.Cut()
 		O.heal_damage(1000,1000,1,1)
 
@@ -1225,10 +1230,11 @@
 	verbs += /mob/living/carbon/human/proc/bloody_doodle
 	return 1 //we applied blood to the item
 
-/mob/living/carbon/human/clean_blood()
+/mob/living/carbon/human/clean_blood(var/clean_feet)
 	.=..()
-	if(istype(feet_blood_DNA, /list) && feet_blood_DNA.len)
+	if(clean_feet && !shoes && istype(feet_blood_DNA, /list) && feet_blood_DNA.len)
 		del(feet_blood_DNA)
+		update_inv_shoes(1)
 		return 1
 
 /mob/living/carbon/human/get_visible_implants(var/class = 0)
@@ -1296,7 +1302,7 @@
 	else
 		usr << "\blue [self ? "Your" : "[src]'s"] pulse is [src.get_pulse(GETPULSE_HAND)]."
 
-/mob/living/carbon/human/proc/set_species(var/new_species,var/on_spawn=0)
+/mob/living/carbon/human/proc/set_species(var/new_species, var/force_organs)
 
 	if(!dna)
 		if(!new_species)
@@ -1314,6 +1320,9 @@
 		remove_language(species.language)
 
 	species = all_species[new_species]
+
+	if(force_organs || !organs || !organs.len)
+		species.create_organs(src)
 
 	if(species.language)
 		add_language(species.language)

@@ -12,6 +12,7 @@
 	var/health = 10
 	var/destroyed = 0
 
+
 /obj/structure/grille/fence/
 	var/width = 3
 	health = 50
@@ -24,6 +25,7 @@
 		else
 			bound_width = world.icon_size
 			bound_height = width * world.icon_size
+
 
 /obj/structure/grille/fence/east_west
 	//width=80
@@ -242,13 +244,3 @@
 			health -= 1
 			healthcheck()
 	..()
-
-
-/obj/structure/grille/resetVariables()
-	density = initial(density)
-	icon_state = initial(icon_state)
-	destroyed = initial(destroyed)
-	health = initial(health)
-
-	return ..()
-

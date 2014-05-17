@@ -132,6 +132,7 @@
 	if(life_tick > 5 && timeofdeath && (timeofdeath < 5 || world.time - timeofdeath > 6000))	//We are long dead, or we're junk mobs spawned like the clowns on the clown shuttle
 		return											//We go ahead and process them 5 times for HUD images and other stuff though.
 
+
 	//Handle temperature/pressure differences between body and environment
 	handle_environment(environment)		//Optimized a good bit.
 
@@ -249,6 +250,9 @@
 
 	proc/handle_mutations_and_radiation()
 
+		if(species.flags & IS_SYNTHETIC) //Robots don't suffer from mutations or radloss.
+			return
+
 		if(getFireLoss())
 			if((M_RESIST_HEAT in mutations) || (prob(1)))
 				heal_organ_damage(0,1)
@@ -272,11 +276,12 @@
 				radiation = 0
 
 			else
+
 				if(species.flags & RAD_ABSORB)
 					var/rads = radiation/25
 					radiation -= rads
 					nutrition += rads
-					heal_overall_damage(rads,rads)
+					adjustBruteLoss(-(rads))
 					adjustOxyLoss(-(rads))
 					adjustToxLoss(-(rads))
 					updatehealth()
@@ -1248,13 +1253,17 @@
 		if(hud_updateflag)
 			handle_hud_list()
 
+
 		if(!client)	return 0
+
+		if(hud_updateflag)
+			handle_hud_list()
 
 		for(var/image/hud in client.images)
 			if(copytext(hud.icon_state,1,4) == "hud") //ugly, but icon comparison is worse, I believe
 				client.images.Remove(hud)
 
-		client.screen.Remove(global_hud.blurry, global_hud.druggy, global_hud.vimpaired, global_hud.darkMask)
+		client.screen.Remove(global_hud.blurry, global_hud.druggy, global_hud.vimpaired, global_hud.darkMask/*, global_hud.nvg*/)
 
 		update_action_buttons()
 
@@ -1267,25 +1276,25 @@
 				var/image/I
 				switch(health)
 					if(-20 to -10)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "passage1")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "passage1")
 					if(-30 to -20)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "passage2")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "passage2")
 					if(-40 to -30)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "passage3")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "passage3")
 					if(-50 to -40)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "passage4")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "passage4")
 					if(-60 to -50)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "passage5")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "passage5")
 					if(-70 to -60)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "passage6")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "passage6")
 					if(-80 to -70)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "passage7")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "passage7")
 					if(-90 to -80)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "passage8")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "passage8")
 					if(-95 to -90)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "passage9")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "passage9")
 					if(-INFINITY to -95)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "passage10")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "passage10")
 				damageoverlay.overlays += I
 		else
 			//Oxygen damage overlay
@@ -1293,19 +1302,19 @@
 				var/image/I
 				switch(oxyloss)
 					if(10 to 20)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "oxydamageoverlay1")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "oxydamageoverlay1")
 					if(20 to 25)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "oxydamageoverlay2")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "oxydamageoverlay2")
 					if(25 to 30)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "oxydamageoverlay3")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "oxydamageoverlay3")
 					if(30 to 35)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "oxydamageoverlay4")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "oxydamageoverlay4")
 					if(35 to 40)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "oxydamageoverlay5")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "oxydamageoverlay5")
 					if(40 to 45)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "oxydamageoverlay6")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "oxydamageoverlay6")
 					if(45 to INFINITY)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "oxydamageoverlay7")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "oxydamageoverlay7")
 				damageoverlay.overlays += I
 
 			//Fire and Brute damage overlay (BSSR)
@@ -1315,17 +1324,17 @@
 				var/image/I
 				switch(hurtdamage)
 					if(10 to 25)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "brutedamageoverlay1")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "brutedamageoverlay1")
 					if(25 to 40)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "brutedamageoverlay2")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "brutedamageoverlay2")
 					if(40 to 55)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "brutedamageoverlay3")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "brutedamageoverlay3")
 					if(55 to 70)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "brutedamageoverlay4")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "brutedamageoverlay4")
 					if(70 to 85)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "brutedamageoverlay5")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "brutedamageoverlay5")
 					if(85 to INFINITY)
-						I = image('icons/mob/screen1_full.dmi', "icon_state" = "brutedamageoverlay6")
+						I = image("icon" = 'icons/mob/screen1_full.dmi', "icon_state" = "brutedamageoverlay6")
 				damageoverlay.overlays += I
 
 		if( stat == DEAD )
@@ -1386,34 +1395,25 @@
 						if(!druggy)		see_invisible = SEE_INVISIBLE_LIVING
 
 			if(glasses)
-				if(istype(glasses, /obj/item/clothing/glasses/meson))
-					sight |= SEE_TURFS
-					if(!druggy)
-						see_invisible = SEE_INVISIBLE_MINIMUM
-				else if(istype(glasses, /obj/item/clothing/glasses/night))
-					see_in_dark = 5
-					if(!druggy)
-						see_invisible = SEE_INVISIBLE_MINIMUM
-				else if(istype(glasses, /obj/item/clothing/glasses/thermal))
-					sight |= SEE_MOBS
-					if(!druggy)
-						see_invisible = SEE_INVISIBLE_MINIMUM
-				else if(istype(glasses, /obj/item/clothing/glasses/material))
-					sight |= SEE_OBJS
-					if(!druggy)
-						see_invisible = SEE_INVISIBLE_MINIMUM
+				var/obj/item/clothing/glasses/G = glasses
+				if(istype(G))
+					see_in_dark += G.darkness_view
+					if(G.vision_flags)		// MESONS
+						sight |= G.vision_flags
+						if(!druggy)
+							see_invisible = SEE_INVISIBLE_MINIMUM
 
 	/* HUD shit goes here, as long as it doesn't modify sight flags */
 	// The purpose of this is to stop xray and w/e from preventing you from using huds -- Love, Doohl
 
-				else if(istype(glasses, /obj/item/clothing/glasses/sunglasses))
+				if(istype(glasses, /obj/item/clothing/glasses/sunglasses))
 					see_in_dark = 1
 					if(istype(glasses, /obj/item/clothing/glasses/sunglasses/sechud))
 						var/obj/item/clothing/glasses/sunglasses/sechud/O = glasses
 						if(O.hud)		O.hud.process_hud(src)
 						if(!druggy)		see_invisible = SEE_INVISIBLE_LIVING
 
-				else if(istype(glasses, /obj/item/clothing/glasses/hud))
+				if(istype(glasses, /obj/item/clothing/glasses/hud))
 					var/obj/item/clothing/glasses/hud/O = glasses
 					O.process_hud(src)
 					if(!druggy)
@@ -1423,6 +1423,7 @@
 			else if(!seer)
 				see_in_dark = species.darksight
 				see_invisible = SEE_INVISIBLE_LIVING
+
 
 			if(healths)
 				if (analgesic)
@@ -1728,6 +1729,9 @@
 			makeSkeleton()
 			return //No puking over skeletons, they don't smell at all!
 
+//		if(loc == /obj/structure/morgue)
+//			return
+
 		for(var/mob/living/carbon/human/H in range(decaylevel, src))
 			if(prob(5))
 				if(airborne_can_reach(get_turf(src), get_turf(H)))
@@ -1811,7 +1815,6 @@
 			var/obj/item/weapon/card/id/I = wear_id.GetID()
 			if(I)
 				perpname = I.registered_name
-
 		for(var/datum/data/record/E in data_core.general)
 			if(E.fields["name"] == perpname)
 				for (var/datum/data/record/R in data_core.security)
@@ -1854,29 +1857,33 @@
 	if(hud_updateflag & 1 << SPECIALROLE_HUD)
 		var/image/holder = hud_list[SPECIALROLE_HUD]
 		holder.icon_state = "hudblank"
-		switch(mind.special_role)
-			if("traitor","Syndicate")
-				holder.icon_state = "hudsyndicate"
-			if("Revolutionary")
-				holder.icon_state = "hudrevolutionary"
-			if("Head Revolutionary")
-				holder.icon_state = "hudheadrevolutionary"
-			if("Cultist")
-				holder.icon_state = "hudcultist"
-			if("Changeling")
-				holder.icon_state = "hudchangeling"
-			if("Wizard","Fake Wizard")
-				holder.icon_state = "hudwizard"
-			if("Death Commando")
-				holder.icon_state = "huddeathsquad"
-			if("Ninja")
-				holder.icon_state = "hudninja"
-			if("Vampire")
-				holder.icon_state = "hudvampire"
-			if("VampThrall")
-				holder.icon_state = "hudvampthrall"
 
-		hud_list[SPECIALROLE_HUD] = holder
+		if(mind)
+
+			switch(mind.special_role)
+				if("traitor","Syndicate")
+					holder.icon_state = "hudsyndicate"
+				if("Revolutionary")
+					holder.icon_state = "hudrevolutionary"
+				if("Head Revolutionary")
+					holder.icon_state = "hudheadrevolutionary"
+				if("Cultist")
+					holder.icon_state = "hudcultist"
+				if("Changeling")
+					holder.icon_state = "hudchangeling"
+				if("Wizard","Fake Wizard")
+					holder.icon_state = "hudwizard"
+				if("Death Commando")
+					holder.icon_state = "huddeathsquad"
+				if("Ninja")
+					holder.icon_state = "hudninja"
+				if("Vampire") // TODO: Check this
+					holder.icon_state = "hudvampire"
+				if("VampThrall")
+					holder.icon_state = "hudvampthrall"
+
+
+			hud_list[SPECIALROLE_HUD] = holder
 
 	hud_updateflag = 0
 

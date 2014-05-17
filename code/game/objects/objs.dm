@@ -19,6 +19,7 @@
 	// What reagents should be logged when transferred TO this object?
 	// Reagent ID => friendly name
 	var/list/reagents_to_log=list()
+
 /obj/Destroy()
 	machines -= src
 	processing_objects -= src
