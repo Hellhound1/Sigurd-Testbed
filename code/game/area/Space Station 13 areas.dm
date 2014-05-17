@@ -1039,10 +1039,6 @@ proc/process_ghost_teleport_locs()
 	name = "\improper Clothing Shop"
 	icon_state = "Theatre"
 
-
-
-
-
 /area/holodeck
 	name = "\improper Holodeck"
 	icon_state = "Holodeck"

@@ -14,6 +14,7 @@
 			return 1
 		return 0
 
+
 /obj/item/projectile/bullet/slug
 	name = "slug"
 

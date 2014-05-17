@@ -112,6 +112,7 @@ var/href_logfile = null
 var/station_name = "NSS Exodus"
 var/game_version = "Custom ParaCode"
 var/changelog_hash = ""
+var/game_year = (text2num(time2text(world.realtime, "YYYY")) + 544)
 
 var/datum/air_tunnel/air_tunnel1/SS13_airtunnel = null
 var/going = 1.0
@@ -166,6 +167,7 @@ var/list/team_alpha = list()
 var/list/team_bravo = list()
 var/list/tdomeobserve = list()
 var/list/tdomeadmin = list()
+var/list/aroomwarp = list()
 var/list/prisonsecuritywarp = list()	//prison security goes to these
 var/list/prisonwarped = list()	//list of players already warped
 var/list/blobstart = list()

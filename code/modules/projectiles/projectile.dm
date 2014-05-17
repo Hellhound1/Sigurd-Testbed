@@ -52,6 +52,7 @@
 	var/agony = 0
 	var/embed = 0 // whether or not the projectile can embed itself in the mob
 
+
 	proc/delete()
 		// Garbage collect the projectiles
 		loc = null
@@ -67,18 +68,19 @@
 	proc/check_fire(var/mob/living/target as mob, var/mob/living/user as mob)  //Checks if you can hit them or not.
 		if(!istype(target) || !istype(user))
 			return 0
-		var/obj/item/projectile/test/in_chamber = new /obj/item/projectile/test(get_step_to(user,target)) //Making the test....
+		var/obj/item/projectile/test/in_chamber = getFromPool(/obj/item/projectile/test, get_step_to(user, target)) //Making the test....
 		in_chamber.target = target
 		in_chamber.flags = flags //Set the flags...
 		in_chamber.pass_flags = pass_flags //And the pass flags to that of the real projectile...
 		in_chamber.firer = user
 		var/output = in_chamber.process() //Test it!
-		del(in_chamber) //No need for it anymore
+		//del(in_chamber) //No need for it anymore
+		returnToPool(in_chamber)
 		return output //Send it back to the gun!
 
 	Bump(atom/A as mob|obj|turf|area)
 		if(A == firer)
-			loc = A.loc
+			//loc = A.loc
 			return 0 //cannot shoot yourself
 
 		if(bumped)	return 0
@@ -147,9 +149,11 @@
 					O.bullet_act(src)
 				for(var/mob/M in A)
 					M.bullet_act(src, def_zone)
-			density = 0
-			invisibility = 101
-			del(src)
+			if(!istype(src, /obj/item/projectile/beam/lightning))
+				density = 0
+				invisibility = 101
+			//del(src)
+			returnToPool(src)
 		return 1
 
 
@@ -164,13 +168,16 @@
 
 	process()
 		if(kill_count < 1)
-			del(src)
+			//del(src)
+			returnToPool(src)
+			return
 		kill_count--
 		spawn while(src)
 			if((!( current ) || loc == current))
 				current = locate(min(max(x + xo, 1), world.maxx), min(max(y + yo, 1), world.maxy), z)
 			if((x == 1 || x == world.maxx || y == 1 || y == world.maxy))
-				del(src)
+				//del(src)
+				returnToPool(src)
 				return
 			step_towards(src, current)
 			sleep(1)
@@ -183,9 +190,11 @@
 		return
 	proc/dumbfire(var/dir) // for spacepods, go snowflake go
 		if(!dir)
-			del(src)
+			//del(src)
+			returnToPool(src)
 		if(kill_count < 1)
-			del(src)
+			//del(src)
+			returnToPool(src)
 		kill_count--
 		spawn while(src)
 			var/turf/T = get_step(src, dir)
