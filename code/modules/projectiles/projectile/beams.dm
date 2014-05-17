@@ -353,8 +353,7 @@ var/list/beam_master = list()
 		cleanup(reference)
 		return
 
-<<<<<<< HEAD
-=======
+
 	proc/cleanup(reference) //Waits .3 seconds then removes the overlay.
 		src = null // Redundant.
 		spawn(3)
@@ -364,7 +363,7 @@ var/list/beam_master = list()
 				for(var/turf/T in turfs)
 					T.overlays -= beam_master[laser_state]
 		return
->>>>>>> d8aa63097bfdd84737afcaf576214f4c8eeebe19
+
 
 /obj/item/projectile/beam/practice
 	name = "laser"
