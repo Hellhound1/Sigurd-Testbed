@@ -702,7 +702,7 @@ var/list/slot_equipment_priority = list( \
 	set category = "OOC"
 	set desc = "Shows you the version of code the server is running on. Identifiable by date."
 	
-	usr << "Server Version #250414"
+	usr << "Server Version #180514"
 
 /mob/verb/cancel_camera()
 	set name = "Cancel Camera View"
