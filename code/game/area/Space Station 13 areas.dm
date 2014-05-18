@@ -881,6 +881,10 @@ proc/process_ghost_teleport_locs()
 
 /area/hallway/secondary/entry/south
 
+/area/hallway/secondary/entry/louge
+	name = "\improper Arrivals Lounge"
+
+
 //Command
 
 /area/bridge
@@ -1123,6 +1127,9 @@ proc/process_ghost_teleport_locs()
 		name = "\improper Chief Engineer's office"
 		icon_state = "engine_control"
 
+	mechanic_workshop
+		name = "\improper Mechanic Workshop"
+		icon_state = "engine"
 
 //Solars
 

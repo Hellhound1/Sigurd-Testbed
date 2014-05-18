@@ -343,6 +343,7 @@
 /turf/simulated/wall/proc/thermitemelt(mob/user as mob)
 	if(mineral == "diamond")
 		return
+
 	var/obj/effect/overlay/O = new/obj/effect/overlay( src )
 	O.name = "Thermite"
 	O.desc = "Looks hot."

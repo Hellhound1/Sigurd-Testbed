@@ -57,7 +57,7 @@
 	var/datum/effect/effect/system/ion_trail_follow/ion_trail = null
 	var/datum/effect/effect/system/spark_spread/spark_system//So they can initialize sparks whenever/N
 	var/jeton = 0
-
+	var/has_power = 1
 	var/killswitch = 0
 	var/killswitch_time = 60
 	var/weapon_lock = 0
@@ -100,6 +100,12 @@
 		hands.icon_state = "standard"
 		icon_state = "secborg"
 		modtype = "Security"
+	else if(istype(src,/mob/living/silicon/robot/drone))
+		laws = new /datum/ai_laws/drone()
+		connected_ai = select_active_ai_with_fewest_borgs()
+		if(connected_ai)
+			connected_ai.connected_robots += src
+			lawsync()
 	else
 		if(mmi.alien || alien)
 			laws = new /datum/ai_laws/alienmov()
@@ -142,18 +148,6 @@
 		var/datum/robot_component/cell_component = components["power cell"]
 		cell_component.wrapped = cell
 		cell_component.installed = 1
-	
-	hud_list[HEALTH_HUD]      = image('icons/mob/hud.dmi', src, "hudblank")
-	hud_list[STATUS_HUD]      = image('icons/mob/hud.dmi', src, "hudhealth100")
-	hud_list[ID_HUD]          = image('icons/mob/hud.dmi', src, "hudblank")
-	hud_list[WANTED_HUD]      = image('icons/mob/hud.dmi', src, "hudblank")
-	hud_list[IMPLOYAL_HUD]    = image('icons/mob/hud.dmi', src, "hudblank")
-	hud_list[IMPCHEM_HUD]     = image('icons/mob/hud.dmi', src, "hudblank")
-	hud_list[IMPTRACK_HUD]    = image('icons/mob/hud.dmi', src, "hudblank")
-	hud_list[SPECIALROLE_HUD] = image('icons/mob/hud.dmi', src, "hudblank")
-	
-
-	
 
 	hud_list[HEALTH_HUD]      = image('icons/mob/hud.dmi', src, "hudblank")
 	hud_list[STATUS_HUD]      = image('icons/mob/hud.dmi', src, "hudhealth100")
@@ -164,10 +158,10 @@
 	hud_list[IMPTRACK_HUD]    = image('icons/mob/hud.dmi', src, "hudblank")
 	hud_list[SPECIALROLE_HUD] = image('icons/mob/hud.dmi', src, "hudblank")
 
-
-
-
-	playsound(loc, 'sound/voice/liveagain.ogg', 75, 1)
+	if(istype(src,/mob/living/silicon/robot/drone))
+		playsound(src.loc, 'sound/machines/twobeep.ogg', 50, 0)
+	else
+		playsound(loc, 'sound/voice/liveagain.ogg', 75, 1)
 
 // setup the PDA and its name
 /mob/living/silicon/robot/proc/setup_PDA()
@@ -335,7 +329,7 @@
 
 	spawn(0)
 		var/newname
-		newname = input(src,"You are a robot. Enter a name, or leave blank for the default name.", "Name change","") as text
+		newname = copytext(sanitize(input(src,"You are a robot. Enter a name, or leave blank for the default name.", "Name change","") as text),1,MAX_NAME_LEN)
 		if (newname != "")
 			custom_name = newname
 
@@ -365,7 +359,7 @@
 				var/list/alm = L[alarm]
 				var/area/A = alm[1]
 				var/list/sources = alm[3]
-				dat += "<NOBR>"
+				dat += "<NOBR>" // wat
 				dat += text("-- [A.name]")
 				if (sources.len > 1)
 					dat += text("- [sources.len] sources")
@@ -619,6 +613,14 @@
 				user.drop_item()
 				W.loc = null
 
+				var/obj/item/robot_parts/robot_component/WC = W
+				if(istype(WC))
+					C.brute_damage = WC.brute
+					C.electronics_damage = WC.burn
+				else //This will nominally mean that removing and replacing a power cell will repair the mount, but I don't care at this point. ~Z
+					C.brute_damage = 0
+					C.electronics_damage = 0
+
 				usr << "\blue You install the [W.name]."
 
 				return
@@ -639,7 +641,8 @@
 			user << "Need more welding fuel!"
 			return
 
-	else if(istype(W, /obj/item/stack/cable_coil) && wiresexposed)
+
+	else if(istype(W, /obj/item/stack/cable_coil) && (wiresexposed || istype(src,/mob/living/silicon/robot/drone)))
 		if (!getFireLoss())
 			user << "Nothing to fix here!"
 			return
@@ -659,16 +662,19 @@
 			else if(mmi && wiresexposed && wires.IsAllCut())
 				//Cell is out, wires are exposed, remove MMI, produce damaged chassis, baleet original mob.
 				user << "You jam the crowbar into the robot and begin levering [mmi]."
-				sleep(30)
-				user << "You damage some parts of the chassis, but eventually manage to rip out [mmi]!"
-				var/obj/item/robot_parts/robot_suit/C = new/obj/item/robot_parts/robot_suit(loc)
-				C.l_leg = new/obj/item/robot_parts/l_leg(C)
-				C.r_leg = new/obj/item/robot_parts/r_leg(C)
-				C.l_arm = new/obj/item/robot_parts/l_arm(C)
-				C.r_arm = new/obj/item/robot_parts/r_arm(C)
-				C.updateicon()
-				new/obj/item/robot_parts/chest(loc)
-				src.Destroy()
+				if(do_after(user,3 SECONDS))
+					user << "You damage some parts of the chassis, but eventually manage to rip out [mmi]!"
+					var/obj/item/robot_parts/robot_suit/C = new/obj/item/robot_parts/robot_suit(loc)
+					C.l_leg = new/obj/item/robot_parts/l_leg(C)
+					C.r_leg = new/obj/item/robot_parts/r_leg(C)
+					C.l_arm = new/obj/item/robot_parts/l_arm(C)
+					C.r_arm = new/obj/item/robot_parts/r_arm(C)
+					C.updateicon()
+					new/obj/item/robot_parts/chest(loc)
+					// This doesn't work.  Don't use it.
+					//src.Destroy()
+					// del() because it's infrequent and mobs act weird in qdel.
+					del(src)
 			else
 				// Okay we're not removing the cell or an MMI, but maybe something else?
 				var/list/removable_components = list()
@@ -682,8 +688,12 @@
 				if(!remove)
 					return
 				var/datum/robot_component/C = components[remove]
-				var/obj/item/I = C.wrapped
+				var/obj/item/robot_parts/robot_component/I = C.wrapped
 				user << "You remove \the [I]."
+				if(istype(I))
+					I.brute = C.brute_damage
+					I.burn = C.electronics_damage
+
 				I.loc = src.loc
 
 				if(C.installed == 1)

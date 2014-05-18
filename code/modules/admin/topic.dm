@@ -6,6 +6,10 @@
 		message_admins("[usr.key] has attempted to override the admin panel!")
 		return
 
+	if(ticker.mode && ticker.mode.check_antagonists_topic(href, href_list))
+		check_antagonists()
+		return
+
 	if(href_list["makeAntag"])
 		switch(href_list["makeAntag"])
 			if("1")
@@ -1299,6 +1303,15 @@
 		message_admins("\red Admin [key_name_admin(usr)] AIized [key_name_admin(H)]!", 1)
 		log_admin("[key_name(usr)] AIized [key_name(H)]")
 		H.AIize()
+		
+		
+	else if(href_list["makemask"])
+		if(!check_rights(R_SPAWN))	return
+		var/mob/currentMob = locate(href_list["makemask"])
+		message_admins("\red Admin [key_name_admin(usr)] made [key_name_admin(currentMob)] into a Mask of Nar'Sie!", 1)
+		log_admin("[key_name(usr)] made [key_name(currentMob)] into a Mask of Nar'Sie!")
+		currentMob.make_into_mask(0,0)
+		
 
 	else if(href_list["makealien"])
 		if(!check_rights(R_SPAWN))	return

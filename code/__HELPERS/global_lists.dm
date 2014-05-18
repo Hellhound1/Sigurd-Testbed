@@ -7,6 +7,7 @@ var/list/directory = list()							//list of all ckeys with associated client
 
 var/global/list/player_list = list()				//List of all mobs **with clients attached**. Excludes /mob/new_player
 var/global/list/mob_list = list()					//List of all mobs, including clientless
+var/global/list/spirits = list()					//List of all the spirits, including Masks
 var/global/list/living_mob_list = list()			//List of all alive mobs, including clientless. Excludes /mob/new_player
 var/global/list/dead_mob_list = list()				//List of all dead mobs, including clientless. Excludes /mob/new_player
 var/global/list/respawnable_list = list()				//List of all mobs, dead or in mindless creatures that still be respawned.
@@ -19,7 +20,6 @@ var/global/list/landmarks_list = list()				//list of all landmarks created
 var/global/list/surgery_steps = list()				//list of all surgery steps  |BS12
 var/global/list/side_effects = list()				//list of all medical sideeffects types by thier names |BS12
 var/global/list/mechas_list = list()				//list of all mechs. Used by hostile mobs target tracking.
-var/global/list/table_recipes = list()				//list of all table craft recipes
 var/global/list/joblist = list()					//list of all jobstypes, minus borg and AI
 
 //Languages/species/whitelist.
@@ -103,15 +103,16 @@ var/global/list/backbaglist = list("Nothing", "Backpack", "Satchel", "Satchel Al
 		var/datum/language/L = new T
 		all_languages[L.name] = L
 
+	var/rkey = 0
 	paths = typesof(/datum/species)-/datum/species
 	for(var/T in paths)
+		rkey++
 		var/datum/species/S = new T
+		S.race_key = rkey //Used in mob icon caching.
 		all_species[S.name] = S
 
 		if(S.flags & IS_WHITELISTED)
 			whitelisted_species += S.name
-
-	init_subtypes(/datum/table_recipe, table_recipes)
 
 /* // Uncomment to debug chemical reaction list.
 /client/verb/debug_chemical_list()
