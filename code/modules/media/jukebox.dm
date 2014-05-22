@@ -81,25 +81,8 @@ var/global/loopModeNames=list(
 	var/current_song  = 0
 	var/autoplay      = 0
 	var/last_reload   = 0
+	var/state_base = "jukebox2"
 
-/obj/machinery/media/jukebox/bar
-	playlist_id="bar"
-	// Must be defined on your server.
-	playlists=list(
-		"bar"  = "Bar Mix",
-		"aussie" = "Aussie",
-		"club" = "Club",
-		"lounge" = "Portishead - Dummy",
-		"customs" = "Customs Music",
-	)
-
-/obj/machinery/media/jukebox/shuttle
-	playlist_id="shuttle"
-	// Must be defined on your server.
-	playlists=list(
-		"shuttle"  = "Shuttle Mix"
-	)
-	invisibility=101 // FAK U NO SONG 4 U
 
 /obj/machinery/media/jukebox/attack_ai(var/mob/user)
 	attack_hand(user)
@@ -117,17 +100,17 @@ var/global/loopModeNames=list(
 	overlays = 0
 	if(stat & (NOPOWER|BROKEN) || !anchored)
 		if(stat & BROKEN)
-			icon_state = "jukebox2-broken"
+			icon_state = "[state_base]-broken"
 		else
-			icon_state = "jukebox2-nopower"
+			icon_state = "[state_base]-nopower"
 		stop_playing()
 		return
-	icon_state = "jukebox2"
+	icon_state = state_base
 	if(playing)
 		if(emagged)
-			overlays += "jukebox2-emagged"
+			overlays += "[state_base]-emagged"
 		else
-			overlays += "jukebox2-running"
+			overlays += "[state_base]-running"
 
 /obj/machinery/media/jukebox/proc/check_reload()
 	return world.time > last_reload + JUKEBOX_RELOAD_COOLDOWN
@@ -177,7 +160,7 @@ var/global/loopModeNames=list(
 		current_song=0
 		if(!emagged)
 			playlist_id = "emagged"
-			last_reload=world.realtime
+			last_reload=world.time
 			playlist=null
 			loop_mode = JUKEMODE_SHUFFLE
 			emagged = 1
@@ -188,7 +171,7 @@ var/global/loopModeNames=list(
 	else if(istype(W,/obj/item/weapon/wrench))
 		var/un = !anchored ? "" : "un"
 		user.visible_message("\blue [user.name] begins [un]locking \the [src.name]'s casters.","\blue You begin [un]locking \the [src.name]'s casters.")
-		if(do_after(user,5 SECONDS))
+		if(do_after(user,30))
 			playsound(get_turf(src), 'sound/items/Ratchet.ogg', 50, 1)
 			anchored = !anchored
 			user.visible_message("\blue [user.name] [un]locks \the [src.name]'s casters.","\red You [un]lock \the [src.name]'s casters.")
@@ -212,7 +195,7 @@ var/global/loopModeNames=list(
 			usr << "\red You must wait 60 seconds between playlist reloads."
 			return
 		playlist_id=href_list["playlist"]
-		last_reload=world.realtime
+		last_reload=world.time
 		playlist=null
 		current_song=0
 		update_music()
@@ -262,7 +245,7 @@ var/global/loopModeNames=list(
 		var/datum/song_info/song
 		if(current_song)
 			song = playlist[current_song]
-		if(!current_song || (song && world.realtime >= media_start_time + song.length))
+		if(!current_song || (song && world.time >= media_start_time + song.length))
 			current_song=1
 			switch(loop_mode)
 				if(JUKEMODE_SHUFFLE)
@@ -279,7 +262,7 @@ var/global/loopModeNames=list(
 	if(current_song && playing)
 		var/datum/song_info/song = playlist[current_song]
 		media_url = song.url
-		media_start_time = world.realtime
+		media_start_time = world.time
 		visible_message("<span class='notice'>\icon[src] \The [src] begins to play [song.display()].</span>","<em>You hear music.</em>")
 		//visible_message("<span class='notice'>\icon[src] \The [src] warbles: [song.length/10]s @ [song.url]</notice>")
 	else
@@ -292,3 +275,50 @@ var/global/loopModeNames=list(
 	playing=0
 	update_music()
 	return
+
+/obj/machinery/media/jukebox/bar
+	playlist_id="bar"
+	// Must be defined on your server.
+	playlists=list(
+		"bar"  = "Bar Mix",
+		"aussie" = "Aussie",
+		"club" = "Club",
+		"lounge" = "Portishead - Dummy",
+		"customs" = "Customs Music",
+	)
+
+// So I don't have to do all this shit manually every time someone sacrifices pun-pun.
+// Also for debugging.
+/obj/machinery/media/jukebox/superjuke
+	name = "Super Juke"
+	desc = "A jukebox used for parties at Mount Olympus and shit."
+
+	state_base = "superjuke"
+
+	playlist_id="bar"
+	// Must be defined on your server.
+	playlists=list(
+		"bar"  = "Bar Mix",
+		"jazz" = "Jazz",
+		"rock" = "Rock",
+
+		"emagged" = "Syndie Mix",
+		"shuttle" = "Shuttle",
+		"endgame" = "Apocalypse"
+	)
+
+/obj/machinery/media/jukebox/superjuke/attackby(obj/item/W, mob/user)
+	// NO FUN ALLOWED.  Emag list is included, anyway.
+	if(istype(W, /obj/item/weapon/card/emag))
+		user << "\red Your [W] refuses to touch \the [src]!"
+		return
+	..()
+
+/obj/machinery/media/jukebox/shuttle
+	playlist_id="shuttle"
+	// Must be defined on your server.
+	playlists=list(
+		"shuttle"  = "Shuttle Mix"
+	)
+	invisibility=101 // FAK U NO SONG 4 U
+

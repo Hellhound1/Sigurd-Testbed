@@ -52,7 +52,7 @@ var/const/NANO				=(1<<0)
 var/const/BLUESHIELD		=(1<<1)
 var/const/CUSTOMS			=(1<<2)
 var/const/BARBER			=(1<<3)
-
+var/const/MECHANIC			=(1<<4)
 
 var/list/assistant_occupations = list(
 )
@@ -71,7 +71,7 @@ var/list/command_positions = list(
 var/list/engineering_positions = list(
 	"Chief Engineer",
 	"Station Engineer",
-	"Atmospheric Technician",
+	"Life Support Specialist",
 )
 
 
@@ -132,7 +132,8 @@ var/list/whitelisted_positions = list(
 	"Blueshield",
 	"Customs Officer",
 	"Nanotrasen Representative",
-	"Barber"
+	"Barber",
+	"Mechanic"
 )
 
 /proc/guest_jobbans(var/job)
