@@ -40,6 +40,9 @@
 	var/list/allowed = null //suit storage stuff.
 	var/obj/item/device/uplink/hidden/hidden_uplink = null // All items can have an uplink hidden inside, just remember to add the triggers.
 
+	var/icon_override = null  //Used to override hardcoded clothing dmis in human clothing proc.
+	var/list/species_fit = null //This object has a different appearance when worn by these species
+
 /obj/item/Destroy()
 	if(istype(src.loc, /mob))
 		var/mob/H = src.loc
@@ -274,9 +277,9 @@
 //returns 1 if the item is equipped by a mob, 0 otherwise.
 //This might need some error trapping, not sure if get_equipped_items() is safe for non-human mobs.
 /obj/item/proc/is_equipped()
-	if(!ismob(loc)) 
+	if(!ismob(loc))
 		return 0
-	
+
 	var/mob/M = loc
 	if(src in M.get_equipped_items())
 		return 1
@@ -539,6 +542,12 @@
 
 /obj/item/proc/IsShield()
 	return 0
+
+/obj/item/proc/get_loc_turf()
+	var/atom/L = loc
+	while(L && !istype(L, /turf/))
+		L = L.loc
+	return loc
 
 /obj/item/proc/eyestab(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
 

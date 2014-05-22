@@ -1,15 +1,18 @@
 //admin verb groups - They can overlap if you so wish. Only one of each verb will exist in the verbs list regardless
 var/list/admin_verbs_default = list(
-	/datum/admins/proc/show_player_panel,	/*shows an interface for individual players, with various links (links require additional flags*/
+//	/datum/admins/proc/show_player_panel,	/*shows an interface for individual players, with various links (links require additional flags*/
 	/client/proc/toggleadminhelpsound,	/*toggles whether we hear a sound when adminhelps/PMs are used*/
 	/client/proc/deadmin_self,			/*destroys our own admin datum so we can play as a regular player*/
 	/client/proc/hide_verbs,			/*hides all our adminverbs*/
 	/client/proc/hide_most_verbs,		/*hides all our hideable adminverbs*/
 	/client/proc/debug_variables,		/*allows us to -see- the variables of any instance in the game. +VAREDIT needed to modify*/
-	/client/proc/check_antagonists		/*shows all antags*/
+	/client/proc/check_antagonists,		/*shows all antags*/
+	/client/proc/cmd_mentor_check_new_players
 //	/client/proc/deadchat				/*toggles deadchat on/off*/
 	)
 var/list/admin_verbs_admin = list(
+	/datum/admins/proc/show_player_panel,
+	/client/proc/player_panel,			/*shows an interface for all players, with links to various panels (old style)*/
 	/client/proc/player_panel_new,		/*shows an interface for all players, with links to various panels*/
 	/client/proc/invisimin,				/*allows our mob to go invisible/visible*/
 	/datum/admins/proc/toggleenter,		/*toggles whether people can join the current game*/
@@ -63,6 +66,7 @@ var/list/admin_verbs_admin = list(
 	/client/proc/toggleattacklogs,
 	/client/proc/toggledebuglogs,
 	/client/proc/update_mob_sprite,
+	/client/proc/toggledrones,
 	/client/proc/check_customitem_activity,
 	/client/proc/man_up,
 	/client/proc/global_man_up,
@@ -230,8 +234,25 @@ var/list/admin_verbs_mod = list(
 	/client/proc/admin_ghost,			/*allows us to ghost/reenter body at will*/
 	/client/proc/cmd_mod_say,
 	/datum/admins/proc/show_player_info,
-	/client/proc/player_panel_new
+	/client/proc/player_panel_new,
+	/client/proc/dsay,
+	/datum/admins/proc/show_player_panel,
+	/client/proc/jobbans,
+	/client/proc/cmd_admin_subtle_message 	/*send an message to somebody as a 'voice in their head'*/
 )
+
+
+var/list/admin_verbs_mentor = list(
+	/client/proc/cmd_admin_pm_context,
+	/client/proc/cmd_admin_pm_panel,
+	/datum/admins/proc/PlayerNotes,
+	/client/proc/admin_ghost,
+	/client/proc/cmd_mod_say,
+	/datum/admins/proc/show_player_info,
+//	/client/proc/dsay,
+	/client/proc/cmd_admin_subtle_message
+)
+
 /client/proc/add_admin_verbs()
 	if(holder)
 		verbs += admin_verbs_default
@@ -248,6 +269,7 @@ var/list/admin_verbs_mod = list(
 		if(holder.rights & R_SOUNDS)		verbs += admin_verbs_sounds
 		if(holder.rights & R_SPAWN)			verbs += admin_verbs_spawn
 		if(holder.rights & R_MOD)			verbs += admin_verbs_mod
+		if(holder.rights & R_MENTOR)		verbs += admin_verbs_mentor
 
 /client/proc/remove_admin_verbs()
 	verbs.Remove(
@@ -738,6 +760,20 @@ var/list/admin_verbs_mod = list(
 	else
 		usr << "You now won't get attack log messages"
 
+
+/client/proc/toggledrones()
+	set name = "Toggle maintenance drones"
+	set category = "Server"
+	if(!holder)	return
+	if(config)
+		if(config.allow_drone_spawn)
+			config.allow_drone_spawn = 0
+			src << "<b>Disallowed maint drones.</b>"
+			message_admins("Admin [key_name_admin(usr)] has disabled maint drones.", 1)
+		else
+			config.allow_drone_spawn = 1
+			src << "<b>Enabled maint drones.</b>"
+			message_admins("Admin [key_name_admin(usr)] has enabled maint drones.", 1)
 
 /client/proc/toggledebuglogs()
 	set name = "Toggle Debug Log Messages"

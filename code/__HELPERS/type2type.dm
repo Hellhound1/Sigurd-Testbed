@@ -304,9 +304,22 @@ proc/tg_list2text(list/list, glue=",")
 	if(rights & R_SOUNDS)		. += "[seperator]+SOUND"
 	if(rights & R_SPAWN)		. += "[seperator]+SPAWN"
 	if(rights & R_MOD)			. += "[seperator]+MODERATOR"
+	if(rights & R_MENTOR)		. += "[seperator]+MENTOR"
 	return .
 
 /proc/ui_style2icon(ui_style)
 	switch(ui_style)
 		if("Midnight")  return 'icons/mob/screen1_Midnight.dmi'
 		else      return 'icons/mob/screen1_White.dmi'
+
+/proc/num2septext(var/theNum, var/sigFig = 7,var/sep=",") // default sigFig (1,000,000)
+	var/finalNum = num2text(theNum, sigFig)
+
+	// Start from the end, or from the decimal point
+	var/end = findtextEx(finalNum, ".") || length(finalNum) + 1
+
+	// Moving towards start of string, insert comma every 3 characters
+	for(var/pos = end - 3, pos > 1, pos -= 3)
+		finalNum = copytext(finalNum, 1, pos) + sep + copytext(finalNum, pos)
+
+	return finalNum

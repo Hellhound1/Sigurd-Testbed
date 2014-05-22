@@ -16,6 +16,8 @@
 	var/mutantrace               // Safeguard due to old code.
 
 	var/breath_type = "oxygen"   // Non-oxygen gas breathed, if any.
+	var/poison_type = "plasma"   // Poisonous air.
+	var/exhale_type = "C02"      // Exhaled gas type.
 
 	var/cold_level_1 = 260  // Cold damage level 1 below this point.
 	var/cold_level_2 = 200  // Cold damage level 2 below this point.
@@ -43,8 +45,26 @@
 	var/flags = 0       // Various specific features.
 	var/bloodflags=0
 	var/bodyflags=0
+
+	var/list/abilities = list()	// For species-derived or admin-given powers
+
+	var/uniform_icons = 'icons/mob/uniform.dmi'
+	var/fat_uniform_icons = 'icons/mob/uniform_fat.dmi'
+	var/gloves_icons = 'icons/mob/hands.dmi'
+	var/glasses_icons = 'icons/mob/eyes.dmi'
+	var/shoes_icons = 'icons/mob/feet.dmi'
+	var/head_icons = 'icons/mob/head.dmi'
+	var/belt_icons = 'icons/mob/belt.dmi'
+	var/wear_suit_icons = 'icons/mob/suit.dmi'
+	var/wear_mask_icons = 'icons/mob/mask.dmi'
+	var/back_icons = 'icons/mob/back.dmi'
+
+	var/blood_color = "#A10808" //Red.
 	var/flesh_color = "#FFC896" //Pink.
-	var/list/abilities = list()  // For species-derived or admin-given powers
+
+	//Used in icon caching.
+	var/race_key = 0
+	var/icon/icon_template
 
 /datum/species/proc/create_organs(var/mob/living/carbon/human/H) //Handles creation of mob organs.
 	//This is a basic humanoid limb setup.
@@ -88,6 +108,11 @@
 
 /datum/species/proc/handle_post_spawn(var/mob/living/carbon/human/H) //Handles anything not already covered by basic species assignment.
 	return
+
+// Used for species-specific names (Vox, etc)
+/datum/species/proc/makeName(var/gender,var/mob/living/carbon/human/H=null)
+	if(gender==FEMALE)	return capitalize(pick(first_names_female)) + " " + capitalize(pick(last_names))
+	else				return capitalize(pick(first_names_male)) + " " + capitalize(pick(last_names))
 
 /datum/species/proc/handle_death(var/mob/living/carbon/human/H) //Handles any species-specific death events (such as dionaea nymph spawns).
 	return
@@ -186,11 +211,70 @@
 	cold_level_3 = 0
 
 	eyes = "vox_eyes_s"
+
 	breath_type = "nitrogen"
+	poison_type = "oxygen"
+
+	uniform_icons = 'icons/mob/species/vox/uniform.dmi'
+	shoes_icons = 'icons/mob/species/vox/shoes.dmi'
+	wear_mask_icons = 'icons/mob/species/vox/masks.dmi'
 
 	flags = NO_SCAN | IS_WHITELISTED | NO_BLOOD
 
 /datum/species/vox/handle_post_spawn(var/mob/living/carbon/human/H)
+
+	H.verbs += /mob/living/carbon/human/proc/leap
+	..()
+
+/datum/species/vox/armalis/handle_post_spawn(var/mob/living/carbon/human/H)
+
+	H.verbs += /mob/living/carbon/human/proc/gut
+	..()
+
+/datum/species/vox/armalis
+	name = "Vox Armalis"
+	icobase = 'icons/mob/human_races/r_armalis.dmi'
+	deform = 'icons/mob/human_races/r_armalis.dmi'
+	language = "Vox-pidgin"
+	path = /mob/living/carbon/human/voxarmalis
+	warning_low_pressure = 50
+	hazard_low_pressure = 0
+
+	cold_level_1 = 80
+	cold_level_2 = 50
+	cold_level_3 = 0
+
+	heat_level_1 = 2000
+	heat_level_2 = 3000
+	heat_level_3 = 4000
+
+	brute_mod = 0.2
+	burn_mod = 0.2
+
+	eyes = "blank_eyes"
+	breath_type = "nitrogen"
+	poison_type = "oxygen"
+
+	flags = NO_SCAN | NO_BLOOD | HAS_TAIL | NO_PAIN | IS_WHITELISTED
+
+	blood_color = "#2299FC"
+	flesh_color = "#808D11"
+
+	tail = "armalis_tail"
+	icon_template = 'icons/mob/human_races/r_armalis.dmi'
+
+	wear_mask_icons = 'icons/mob/species/vox/armalis/mask.dmi'
+	shoes_icons = 'icons/mob/species/vox/armalis/shoes.dmi'
+	gloves_icons = 'icons/mob/species/vox/armalis/hands.dmi'
+
+/datum/species/vox/armalis/handle_post_spawn(var/mob/living/carbon/human/H)
+	H.verbs += /mob/living/carbon/human/proc/gut
+	..()
+
+/datum/species/vox/handle_post_spawn(var/mob/living/carbon/human/H)
+
+	H.verbs += /mob/living/carbon/human/proc/leap
+
 	var/datum/organ/external/affected = H.get_organ("head")
 
 	//To avoid duplicates.
@@ -234,15 +318,18 @@
 	path = /mob/living/carbon/human/slime
 	primitive = /mob/living/carbon/slime/adult
 
-	flags = IS_WHITELISTED | NO_BREATHE | HAS_LIPS | NO_INTORGANS
+	flags = IS_WHITELISTED | NO_BREATHE | HAS_LIPS | NO_INTORGANS | NO_SCAN
 	bloodflags = BLOOD_SLIME
 	bodyflags = FEET_NOSLIP
 	abilities = list(/mob/living/carbon/human/slime/proc/slimepeople_ventcrawl)
 
 /datum/species/slime/handle_post_spawn(var/mob/living/carbon/human/H)
+	H.dna = new /datum/dna(null)
+	H.dna.species=H.species.name
 	H.dna.mutantrace = "slime"
 	H.update_mutantrace()
 
+	return ..()
 
 /datum/species/grey // /vg/
 	name = "Grey"
@@ -262,6 +349,17 @@
 	// Both must be set or it's only a 45% chance of manifesting.
 	default_mutations=list(M_REMOTE_TALK)
 	default_block_names=list("REMOTETALK")
+
+
+	makeName(var/gender,var/mob/living/carbon/human/H=null)
+		var/sounds = rand(2,8)
+		var/i = 0
+		var/newname = ""
+
+		while(i<=sounds)
+			i++
+			newname += pick(vox_name_syllables)
+		return capitalize(newname)
 
 /datum/species/diona
 	name = "Diona"

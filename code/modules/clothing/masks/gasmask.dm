@@ -59,6 +59,7 @@
 	icon_state = "s-ninja(norm)"
 	item_state = "s-ninja_mask"
 	vchange = 1
+	unacidable = 1
 	siemens_coefficient = 0.2
 
 /obj/item/clothing/mask/gas/voice/space_ninja/scar
@@ -85,6 +86,7 @@
 	desc = "A true prankster's facial attire. A clown is incomplete without his wig and mask."
 	icon_state = "clown"
 	item_state = "clown_hat"
+	species_fit = list("Vox")
 	flags = FPRINT | TABLEPASS | MASKCOVERSMOUTH | MASKCOVERSEYES | BLOCK_GAS_SMOKE_EFFECT | MASKINTERNALS | BLOCKHAIR
 
 /obj/item/clothing/mask/gas/clown_hat/attack_self(mob/user)
@@ -103,6 +105,14 @@
 		M << "Your Clown Mask has now morphed into [choice], all praise the Honk Mother!"
 		return 1
 
+
+/obj/item/clothing/mask/gas/virusclown_hat
+	name = "clown wig and mask"
+	desc = "A true prankster's facial attire. A clown is incomplete without his wig and mask."
+	icon_state = "clown"
+	item_state = "clown_hat"
+
+
 /obj/item/clothing/mask/gas/sexyclown
 	name = "sexy-clown wig and mask"
 	desc = "A feminine clown mask for the dabbling crossdressers or female entertainers."
@@ -114,6 +124,7 @@
 	desc = "The traditional mime's mask. It has an eerie facial posture."
 	icon_state = "mime"
 	item_state = "mime"
+	species_fit = list("Vox")
 
 /obj/item/clothing/mask/gas/monkeymask
 	name = "monkey mask"
@@ -142,6 +153,7 @@
 	name = "owl mask"
 	desc = "Twoooo!"
 	icon_state = "owl"
+	species_fit = list("Vox")
 
 
 // ********************************************************************
@@ -272,3 +284,4 @@
 
 
 // ********************************************************************
+

@@ -17,7 +17,8 @@ var/global/list/special_roles = list( //keep synced with the defines BE_* in set
 	"ninja" = "true",									 // 10
 	"vox raider" = IS_MODE_COMPILED("heist"),			 // 11
 	"slime" = 1,                                         // 12
-	"vampire" = IS_MODE_COMPILED("vampire")				 // 13
+	"vampire" = IS_MODE_COMPILED("vampire"),				 // 13
+	"mutineer" = IS_MODE_COMPILED("mutiny")             // 14
 )
 
 var/const/MAX_SAVE_SLOTS = 10
@@ -369,6 +370,7 @@ datum/preferences
 
 		var/HTML = "<body>"
 		HTML += "<tt><center>"
+		HTML += "<b>Choose occupation chances</b><br>Unavailable occupations are crossed out.<br><br>"
 		HTML += "<center><a href='?_src_=prefs;preference=job;task=close'>\[Done\]</a></center><br>" // Easier to press up here.
 		HTML += "<div align='center'>Left-click to raise an occupation preference, right-click to lower it.<br></div>"
 		HTML += "<script type='text/javascript'>function setJobPrefRedirect(level, rank) { window.location.href='?_src_=prefs;preference=job;task=setJobLevel;level=' + level + ';text=' + encodeURIComponent(rank); return false; }</script>"
@@ -399,11 +401,11 @@ datum/preferences
 				HTML += "<font color=red>[rank]</font></td><td><font color=red><b> \[KARMA]</b></font></td></tr>"
 				continue
 			if(jobban_isbanned(user, rank))
-				HTML += "<font color=red>[rank]</font></td><td><font color=red><b> \[BANNED]</b></font></td></tr>"
+				HTML += "<del>[rank]</del></td><td><b> \[BANNED]</b></td></tr>"
 				continue
 			if(!job.player_old_enough(user.client))
 				var/available_in_days = job.available_in_days(user.client)
-				HTML += "<font color=red>[rank]</font></td><td><font color=red> \[IN [(available_in_days)] DAYS]</font></td></tr>"
+				HTML += "<del>[rank]</del></td><td> \[IN [(available_in_days)] DAYS]</td></tr>"
 				continue
 			if((job_civilian_low & ASSISTANT) && (rank != "Assistant"))
 				HTML += "<font color=orange>[rank]</font></td><td></td></tr>"
@@ -911,7 +913,7 @@ datum/preferences
 			if("random")
 				switch(href_list["preference"])
 					if("name")
-						real_name = random_name(gender)
+						real_name = random_name(gender,species)
 					if("age")
 						age = rand(AGE_MIN, AGE_MAX)
 					if("hair")
@@ -1358,7 +1360,7 @@ datum/preferences
 
 	proc/copy_to(mob/living/carbon/human/character, safety = 0)
 		if(be_random_name)
-			real_name = random_name(gender)
+			real_name = random_name(gender,species)
 
 		if(config.humans_need_surnames)
 			var/firstspace = findtext(real_name, " ")
