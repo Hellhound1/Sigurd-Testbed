@@ -725,7 +725,7 @@ var/list/slot_equipment_priority = list( \
 	set category = "OOC"
 	set desc = "Shows you the version of code the server is running on. Identifiable by date."
 	
-	usr << "Server Version #180514/2"
+	usr << "Server Version #220514"
 
 /mob/Topic(href, href_list)
 	if(href_list["mach_close"])
