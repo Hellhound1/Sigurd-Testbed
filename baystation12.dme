@@ -390,6 +390,7 @@
 #include "code\game\jobs\job\security.dm"
 #include "code\game\jobs\job\silicon.dm"
 #include "code\game\jobs\job\supervisor.dm"
+#include "code\game\jobs\job_objectives\crew.dm"
 #include "code\game\jobs\job_objectives\science.dm"
 #include "code\game\machinery\adv_med.dm"
 #include "code\game\machinery\ai_slipper.dm"
@@ -1624,6 +1625,6 @@
 #include "code\ZAS\Zone.dm"
 #include "interface\interface.dm"
 #include "interface\skin.dmf"
-#include "maps\tgstation-redux-WIP.dmm"
+#include "maps\Sigurdified_Cyberiad.dmm"
 #include "maps\RandomZLevels\clown3.dmm"
 // END_INCLUDE
