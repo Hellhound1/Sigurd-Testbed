@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////////////////
 // Crew jobs - by Hellhound1
-// Basically, gives command staff & security the job of getting everyone off the station.
+// Basically, gives staff jobs to do.
 /////////////////////////////////////////////////////////////////////////////////////////
 
 /datum/job_objective/save_crew
@@ -34,4 +34,7 @@
 				if (get_turf(player) in pod4)
 					return 0
 		return 1
+	
+
+	
 	

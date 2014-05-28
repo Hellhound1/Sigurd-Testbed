@@ -62,6 +62,9 @@
 	idtype = /obj/item/weapon/card/id/silver
 	req_admin_notify = 1
 	minimal_player_age = 10
+	required_objectives=list(
+		/datum/job_objective/save_crew
+	)
 	access = list(access_security, access_sec_doors, access_brig, access_court, access_forensics_lockers,
 			            access_medical, access_engine, access_change_ids, access_ai_upload, access_eva, access_heads,
 			            access_all_personal_lockers, access_maint_tunnels, access_bar, access_janitor, access_construction, access_morgue,
@@ -97,6 +100,8 @@
 		var/datum/organ/external/affected = H.organs_by_name["head"]
 		affected.implants += L
 		L.part = affected
+		H << "\red<b>As the Head of Personnel, it is your job to make sure all the crew, dead or alive, make it off the station.</b>"
+		H << "\red<b>You can get a reminder of this objective by viewing your notes.</b>"
 		return 1
 
 
