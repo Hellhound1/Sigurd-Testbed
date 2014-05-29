@@ -10,7 +10,7 @@
 	return "Make sure everyone gets off the station, dead or alive."
 	
 /datum/job_objective/save_crew/check_for_completion()
-	if(emergency_shuttle.location<2)
+	/*if(emergency_shuttle.location<2)
 		return 0
 			
 		var/area/shuttle = locate(/area/shuttle/escape/centcom)
@@ -33,8 +33,16 @@
 					return 0
 				if (get_turf(player) in pod4)
 					return 0
+					*/
+	if(emergency_shuttle.location==2)
 		return 1
 	
-
+/datum/job_objective/no_dead
+	completion_payment=1000
 	
+/datum/job_objective/no_dead/get_description()
+	return "Make sure there are no dead bodies left around the station. Corpses must be placed in the morgue, or in a bodybag on the escape shuttle, if anything goes wrong."
+	
+/datum/job_objective/no_dead/check_for_completion()
+		return 1
 	
