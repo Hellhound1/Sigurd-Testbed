@@ -454,7 +454,7 @@ var/global/datum/controller/gameticker/ticker
 	mode.declare_job_completion()
 
 	scoreboard()
-	karmareminder()
-
+//	karmareminder() - this is a pain in the ass for sigurd.
+//	world << "[count]"
 	return 1
 
